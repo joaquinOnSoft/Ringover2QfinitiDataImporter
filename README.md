@@ -6,3 +6,6 @@ Command line tool to download calls from `Ringover` and generate an Excel file t
 
 > **OpenText Qfiniti** is a call center workforce management software that helps 
 > analyze agent to customer multichannel interactions to improve customer service.
+
+> The `Qfiniti Data Import tool`  is used to import recording transactions from etalk Recorder, 
+> older versions of Qfiniti, or a 3rd party recording device into Qfiniti.
