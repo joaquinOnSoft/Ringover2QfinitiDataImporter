@@ -32,7 +32,7 @@ public class FileUtilTest{
 	
 	@Test
 	public void testGetFileFromResources() {
-		File f = FileUtil.getFileFromResources("user-mapping.properties");
+		File f = FileUtil.getFileFromResources("ringover.properties");
 		assertNotNull(f);
 		assertTrue(f.exists());
 	}
