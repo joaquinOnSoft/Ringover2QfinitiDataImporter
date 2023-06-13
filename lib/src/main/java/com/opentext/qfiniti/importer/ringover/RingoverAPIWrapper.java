@@ -41,8 +41,50 @@ public class RingoverAPIWrapper {
 	/** Ringover Public API (2.0.3) URL base*/
 	public static final String URL_BASE = "https://public-api.ringover.com/v2";
 	
-	
 	public static final String METHOD_CALLS = "/calls";
+	
+	/**
+	 * start_date	
+	 * string (date)
+	 * Example: start_date=2020-06-27T00:00:00.53Z
+	 * Used to create a time cursor. Must be used with end_date
+	 */
+	public static final String PARAM_START_DATE = "start_date";
+
+	/**
+	 * end_date	
+	 * string (date)
+	 * Example: end_date=2020-07-27T00:00:00.53Z
+	 * Used to create a time cursor. Must be used with start_date and the difference 
+	 * between the start_date and the end_date must not exceed 15 days.
+	 */
+	public static final String PARAM_END_DATE = "end_date";
+
+	/**
+	 * limit_count	
+	 * integer (int64) <= 1000
+	 * Restrict the number of returned rows
+	 */
+	public static final String PARAM_LIMIT_COUNT = "limit_count";
+
+	/**
+	 * last_id_returned	
+	 * integer (int64)
+	 * Example: last_id_returned=0
+	 * The request will return cdr_id (call logs) prior to this one
+	 */
+	public static final String PARAM_LAST_ID_RETURNED = "last_id_returned";
+
+	/**
+	 * call_type	
+	 * string
+	 * Used to filter certain types of call. 
+	 *    'ANSWERED' filters answered calls. 
+	 *    'MISSED' filters missed calls. 
+	 *    'OUT' filters outgoing calls. 
+	 *    'VOICEMAIL' filters calls ending on voicemail.
+	 */
+	public static final String PARAM = "";
 		
     private static final Logger log = LogManager.getLogger(RingoverAPIWrapper.class);
     
