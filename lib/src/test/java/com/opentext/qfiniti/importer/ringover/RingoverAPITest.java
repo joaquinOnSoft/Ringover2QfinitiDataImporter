@@ -14,14 +14,14 @@ import org.junit.jupiter.api.Test;
 import com.opentext.qfiniti.importer.ringover.pojo.calls.Call;
 import com.opentext.qfiniti.importer.ringover.pojo.calls.TerminatedCalls;
 
-public class RingoverAPIWrapperTest {
+public class RingoverAPITest {
 
-	private RingoverAPIWrapper wrapper;
+	private RingoverAPI wrapper;
 	
 	@BeforeEach
 	public void beforeEach() {
 		try {
-			wrapper = new RingoverAPIWrapper();
+			wrapper = new RingoverAPI();
 		} catch (FileNotFoundException e) {
 			fail(e);
 		} catch (IOException e) {

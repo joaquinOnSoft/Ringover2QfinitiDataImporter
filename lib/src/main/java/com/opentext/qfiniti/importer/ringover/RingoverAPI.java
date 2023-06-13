@@ -23,7 +23,7 @@ import com.opentext.qfiniti.importer.util.FileUtil;
  * <strong>Ringover Public API (2.0.3)</strong>
  * <p>
  * Ringover's REST API allows you to easily retrieve your phone information, 
- * access your contacts, users and groups and their properties. Our API is 
+ * access your contacts, users and groups and their properties. The API is 
  * designed to answer your requests made via HTTP commands and to receive 
  * data with standard HTTP response codes.
  * </p>
@@ -34,7 +34,9 @@ import com.opentext.qfiniti.importer.util.FileUtil;
  * @author Joaquín Garzón
  *
  */
-public class RingoverAPIWrapper {
+public class RingoverAPI {
+	private static final String RINGOVER_PROPERTIES_FILE_NAME = "ringover.properties";
+
 	/** Property name used in the `ringover.properties` file */
 	private static final String RINGOVER_API_KEY = "apiKey";
 
@@ -44,54 +46,67 @@ public class RingoverAPIWrapper {
 	public static final String METHOD_CALLS = "/calls";
 	
 	/**
-	 * start_date	
-	 * string (date)
-	 * Example: start_date=2020-06-27T00:00:00.53Z
-	 * Used to create a time cursor. Must be used with end_date
+	 * <strong>Parameter</strong>: start_date <br/>	
+	 * <strong>Data type</strong>: string (date) <br/>
+	 * Example: start_date=2020-06-27T00:00:00.53Z <br/>
+	 * <strong>Description</strong>: Used to create a time cursor. Must be used with end_date
 	 */
 	public static final String PARAM_START_DATE = "start_date";
 
 	/**
-	 * end_date	
-	 * string (date)
-	 * Example: end_date=2020-07-27T00:00:00.53Z
-	 * Used to create a time cursor. Must be used with start_date and the difference 
-	 * between the start_date and the end_date must not exceed 15 days.
+	 * <strong>Parameter</strong>: end_date <br/>	
+	 * <strong>Data type</strong>: string (date) <br/>
+	 * Example: end_date=2020-07-27T00:00:00.53Z <br/>
+	 * <strong>Description</strong>: Used to create a time cursor. Must be used with 
+	 * start_date and the difference between the start_date and the end_date must not exceed 15 days.
 	 */
 	public static final String PARAM_END_DATE = "end_date";
 
 	/**
-	 * limit_count	
-	 * integer (int64) <= 1000
-	 * Restrict the number of returned rows
+	 * <strong>Parameter</strong>: limit_count <br/>	
+	 * <strong>Data type</strong>: integer (int64) &lt;= 1000 <br/>
+	 * <strong>Description</strong>: Restrict the number of returned rows
 	 */
 	public static final String PARAM_LIMIT_COUNT = "limit_count";
 
 	/**
-	 * last_id_returned	
-	 * integer (int64)
-	 * Example: last_id_returned=0
-	 * The request will return cdr_id (call logs) prior to this one
+	 * <strong>Parameter</strong>: last_id_returned <br/>	
+	 * <strong>Data type</strong>: integer (int64) <br/>
+	 * Example: last_id_returned=0 <br/>
+	 * <strong>Description</strong>: The request will return cdr_id (call logs) prior to this one
 	 */
 	public static final String PARAM_LAST_ID_RETURNED = "last_id_returned";
 
 	/**
-	 * call_type	
-	 * string
-	 * Used to filter certain types of call. 
-	 *    'ANSWERED' filters answered calls. 
-	 *    'MISSED' filters missed calls. 
-	 *    'OUT' filters outgoing calls. 
-	 *    'VOICEMAIL' filters calls ending on voicemail.
+	 * <strong>Parameter</strong>: call_type	
+	 * <strong>Data type</strong>: string
+	 * <strong>Description</strong>: Used to filter certain types of call. 
+	 * <ul>
+	 *    <li>'ANSWERED' filters answered calls.</li> 
+	 *    <li>'MISSED' filters missed calls.</li> 
+	 *    <li>'OUT' filters outgoing calls.</li> 
+	 *    <li>'VOICEMAIL' filters calls ending on voicemail.</li>
+	 * </ul>   
 	 */
-	public static final String PARAM = "";
+	public static final String PARAM_CALL_TYPE = "call_type";
 		
-    private static final Logger log = LogManager.getLogger(RingoverAPIWrapper.class);
+    private static final Logger log = LogManager.getLogger(RingoverAPI.class);
     
     private String apiKey = null;
     
-    public RingoverAPIWrapper() throws FileNotFoundException, IOException {
-    	File f = FileUtil.getFileFromResources("ringover.properties");
+    /**
+     * Initialize the Ringover API class.
+     * <p>
+     * Read the Ringover API key from the properties file called `ringover.properties`.
+     * </p>
+     * <p>
+     * <strong>NOTE</strong>: The properties file must be located in the `CLASSPATH` 
+     * </p> 
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public RingoverAPI() throws FileNotFoundException, IOException {
+    	File f = FileUtil.getFileFromResources(RINGOVER_PROPERTIES_FILE_NAME);
     	
     	if(f != null && f.exists()) {
 	    	Properties prop = new Properties();
@@ -101,7 +116,7 @@ public class RingoverAPIWrapper {
     	}
     }
 
-    public RingoverAPIWrapper(String apiKey) {
+    public RingoverAPI(String apiKey) {
     	this.apiKey = apiKey;
     }    
     
