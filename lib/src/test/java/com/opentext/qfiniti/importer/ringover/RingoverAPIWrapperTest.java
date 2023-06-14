@@ -36,6 +36,6 @@ public class RingoverAPIWrapperTest {
 		}
 		
 		assertNotNull(recordings);
-		assertEquals(5, recordings.size());
+		assertEquals(4, recordings.size());
 	}
 }

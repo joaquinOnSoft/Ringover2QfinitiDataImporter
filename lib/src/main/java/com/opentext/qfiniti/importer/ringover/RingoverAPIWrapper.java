@@ -79,6 +79,8 @@ public class RingoverAPIWrapper {
 		int numCallsRetrieved = 0;
 		int totalCallCount = 0; 
 		int callListCount = 0;
+		boolean firstCallInPeriod = true;
+		
 		do {
 			calls = api.getAllCalls(startDateTmp, endDateTmp, limitCount, callType, lastIdReturned);
 			if(calls != null && calls.getTotalCallCount() > 0) {
@@ -93,7 +95,10 @@ public class RingoverAPIWrapper {
 				}
 				
 				// Update last call Id returned
-				totalCallCount = calls.getTotalCallCount(); 
+				if(firstCallInPeriod) {
+					totalCallCount = calls.getTotalCallCount();
+					firstCallInPeriod = false;
+				}
 				callListCount = calls.getCallListCount();
 				numCallsRetrieved += callListCount;
 				if(numCallsRetrieved <= totalCallCount) {
