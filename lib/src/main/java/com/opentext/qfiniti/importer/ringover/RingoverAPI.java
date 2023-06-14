@@ -169,7 +169,7 @@ public class RingoverAPI {
 			}
 			
 			if(lastIdReturned != null) {
-				builder.addParameter(PARAM_CALLS_LAST_ID_RETURNED, Integer.toString(limitCount));
+				builder.addParameter(PARAM_CALLS_LAST_ID_RETURNED, lastIdReturned);
 			}
 			
 			if(callType != null) {

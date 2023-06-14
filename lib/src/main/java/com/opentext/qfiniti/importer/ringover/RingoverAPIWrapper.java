@@ -103,7 +103,7 @@ public class RingoverAPIWrapper {
 			        try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
-						log.error("Sleep betweein Ringover API calls.", e);
+						log.error("Sleeping between Ringover API calls.", e);
 					}
 				}
 			}
