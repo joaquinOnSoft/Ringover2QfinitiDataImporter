@@ -35,7 +35,7 @@ public class RingoverAPITest {
 		
 		assertNotNull(calls);
 		assertEquals(11330955, calls.getUserId());
-		assertEquals(2, calls.getCallListCount());
+		assertEquals(5, calls.getCallListCount());
 		assertNotNull(calls.getCallList());
 		List<Call>  callList = calls.getCallList();
 		assertNotNull(callList.get(0).getUser());
