@@ -49,9 +49,15 @@ public class RingoverAPIWrapper {
 		Date startDateTmp = null;
 		Date startDatePlus15Days = null;
 		Date endDateTmp = null;
-				
+
+		//
+		// Initialize Ringover API
+		//
 		RingoverAPI api = new RingoverAPI();
 		
+		//
+		// Validate parameters
+		//
 		if(startDate != null && endDate != null) {
 			if (endDate.before(startDate)) {
 				throw new IllegalArgumentException("End date (" + endDate + ") must be posterior to Start date (" + startDate + ")");
@@ -82,38 +88,49 @@ public class RingoverAPIWrapper {
 		boolean firstCallInPeriod = true;
 		
 		do {
-			calls = api.getAllCalls(startDateTmp, endDateTmp, limitCount, callType, lastIdReturned);
-			if(calls != null && calls.getTotalCallCount() > 0) {
-				List<CallRecording> recordingsTmp = transform(calls);
-				
-				if(recordingsTmp != null && recordingsTmp.size() > 0) {
-					if(recordings == null) {
-						recordings = new LinkedList<CallRecording>();
+			do {
+				calls = api.getAllCalls(startDateTmp, endDateTmp, limitCount, callType, lastIdReturned);
+				if(calls != null && calls.getTotalCallCount() > 0) {
+					List<CallRecording> recordingsTmp = transform(calls);
+					
+					if(recordingsTmp != null && recordingsTmp.size() > 0) {
+						if(recordings == null) {
+							recordings = new LinkedList<CallRecording>();
+						}
+						
+						recordings.addAll(recordingsTmp);
 					}
 					
-					recordings.addAll(recordingsTmp);
-				}
-				
-				// Update last call Id returned
-				if(firstCallInPeriod) {
-					totalCallCount = calls.getTotalCallCount();
-					firstCallInPeriod = false;
-				}
-				callListCount = calls.getCallListCount();
-				numCallsRetrieved += callListCount;
-				if(numCallsRetrieved <= totalCallCount) {
-					lastIdReturned = Integer.toString( calls.getCallList().get(callListCount - 1).getCdrId() );
-					
-					//Warning [Rate limit]: There is a 2-call per second limit applied to each request.
-			        try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						log.error("Sleeping between Ringover API calls.", e);
+					// Update last call Id returned
+					if(firstCallInPeriod) {
+						totalCallCount = calls.getTotalCallCount();
+						firstCallInPeriod = false;
+					}
+					callListCount = calls.getCallListCount();
+					numCallsRetrieved += callListCount;
+					if(numCallsRetrieved <= totalCallCount) {
+						lastIdReturned = Integer.toString( calls.getCallList().get(callListCount - 1).getCdrId() );
+						
+						//Warning [Rate limit]: There is a 2-call per second limit applied to each request.
+				        try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							log.error("Sleeping between Ringover API calls.", e);
+						}
 					}
 				}
 			}
+			while(numCallsRetrieved < totalCallCount);
+			
+			startDateTmp = endDateTmp;
+			if(DateUtil.datePlusXDays(endDateTmp, 15).after(endDate)) {
+				endDateTmp = endDate;
+			}
+			else {
+				endDateTmp = DateUtil.datePlusXDays(endDateTmp, 15);
+			}
 		}
-		while(numCallsRetrieved < totalCallCount);
+		while(endDateTmp.before(endDateTmp));
 		
 		return recordings;
 	}	
