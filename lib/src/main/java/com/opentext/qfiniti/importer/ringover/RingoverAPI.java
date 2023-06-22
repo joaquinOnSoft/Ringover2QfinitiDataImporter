@@ -200,7 +200,9 @@ public class RingoverAPI {
                     
                 	ObjectMapper mapper = new ObjectMapper();
                 	//JSON string to Java Object
-                	responseCalls = mapper.readValue(result, TerminatedCalls.class);            
+                	if(result != null && result.compareTo("") != 0) {
+                		responseCalls = mapper.readValue(result, TerminatedCalls.class);
+                	}
                 }
 		        // Ensure `response` it is fully consumed
 		        EntityUtils.consume(entity);		       		        

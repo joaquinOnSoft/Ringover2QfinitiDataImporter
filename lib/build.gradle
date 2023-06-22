@@ -17,6 +17,10 @@ repositories {
 }
 
 dependencies {
+	// Apache Commons CLI provides a simple API for presenting, processing and validating a Command Line Interface.		
+	// https://mvnrepository.com/artifact/commons-cli/commons-cli
+	implementation 'commons-cli:commons-cli:1.5.0'   
+
 	// General data-binding functionality for Jackson: works on core streaming API	
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
 	implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'

@@ -17,7 +17,33 @@ import com.opentext.qfiniti.importer.util.DateUtil;
 
 public class RingoverAPIWrapper {
 
+	private static final int MAX_NUMBER_RETURNED_ROWS = 1000;
 	private static final Logger log = LogManager.getLogger(RingoverAPIWrapper.class);
+	
+	/**
+	 * <strong>Get all calls</strong>
+	 * <p>
+	 * This request allows you to retrieve your terminated calls. All the parameters are optional. 
+	 * For a more refined search, please refer to the POST method.
+	 * </p>
+	 * 
+	 * @param startDate - Used to create a time cursor. Must be used with `endDate`
+	 * @param endDate - Used to create a time cursor. Must be used with `startDate` and the difference 
+	 * between the `startDate` and the `endDate` must not exceed 15 days.
+	 * @param limitCount - Restrict the number of returned rows (Max. 1000)
+	 * @param callType - Used to filter certain types of call. 'ANSWERED' filters answered calls. 
+	 * 'MISSED' filters missed calls. 'OUT' filters outgoing calls. 'VOICEMAIL' filters calls ending on voicemail.
+	 * 
+	 * @throws IllegalArgumentException - 
+	 * @throws IOException - Properties file not found or no permissions 
+	 * @throws FileNotFoundException - Properties file not found 
+	 * 
+	 * @see <a href="https://mkyong.com/java/apache-httpclient-examples/">Apache HttpClient Examples</a>
+	 */	
+	public List<CallRecording> getAllCalls(Date startDate, Date endDate, CallType callType) 
+			throws IllegalArgumentException, FileNotFoundException, IOException {
+		return getAllCalls(startDate, endDate, MAX_NUMBER_RETURNED_ROWS, callType);
+	}
 	
 	/**
 	 * <strong>Get all calls</strong>
