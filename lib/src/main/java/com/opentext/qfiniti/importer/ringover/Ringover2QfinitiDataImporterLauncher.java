@@ -41,6 +41,10 @@ public class Ringover2QfinitiDataImporterLauncher {
 		Option outputOption = new Option("o", "output", true, "Output file name. Default value: calls-yyyyMMdd.xls");
 		options.addOption(outputOption);
 
+		Option uncOption = new Option("u", "unc", true, "Universal Naming Convention (UNC) path to store the call recording files, i.e. \\\\SERVER\\recordings");
+		uncOption.setRequired(true);
+		options.addOption(uncOption);		
+		
 		CommandLineParser parser = new DefaultParser();
 		HelpFormatter formatter = new HelpFormatter();
 		CommandLine cmd = null;

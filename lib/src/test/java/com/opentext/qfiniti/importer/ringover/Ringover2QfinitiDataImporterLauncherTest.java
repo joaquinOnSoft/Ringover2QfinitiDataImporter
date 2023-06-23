@@ -66,7 +66,8 @@ public class Ringover2QfinitiDataImporterLauncherTest {
 		String[] args = {
 				"--from", "20230601",
 				"--to", "20230615",
-				"--callType", "ANSWERED"
+				"--callType", "ANSWERED",
+				"--unc", "\\\\MY-SERVER\\calls"
 		};
 		
 		Ringover2QfinitiDataImporterLauncher.main(args);
