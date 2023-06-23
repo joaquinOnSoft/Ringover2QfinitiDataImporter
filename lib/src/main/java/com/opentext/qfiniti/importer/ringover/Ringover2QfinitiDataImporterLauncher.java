@@ -58,6 +58,7 @@ public class Ringover2QfinitiDataImporterLauncher {
 			String outputFileName = "calls-" 
 					+ DateUtil.dateToFormat(Calendar.getInstance().getTime(), "yyyyMMdd")
 					+ ".xls";
+			String uncPath = null;
 
 			if (cmd.hasOption("from") || cmd.hasOption("f")) {
 				String fromStr = cmd.getOptionValue("from");
@@ -84,7 +85,11 @@ public class Ringover2QfinitiDataImporterLauncher {
 				outputFileName = cmd.getOptionValue("output");
 			}
 
-			RingoverAPIWrapper api = new RingoverAPIWrapper();
+			if (cmd.hasOption("unc") || cmd.hasOption("u")) {
+				uncPath = cmd.getOptionValue("unc");
+			}			
+						
+			RingoverAPIWrapper api = new RingoverAPIWrapper(uncPath);
 			List<CallRecording> recordings = api.getAllCalls(from, to, cType);
 
 			if (recordings == null || recordings.size() == 0) {

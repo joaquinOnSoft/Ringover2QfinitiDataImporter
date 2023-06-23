@@ -22,7 +22,11 @@ import com.opentext.qfiniti.importer.util.DateUtil;
 
 public class RingoverAPIWrapper {
 
+	private static final String DIRECTION_OUT = "out";
+	private static final String DIRECTION_IN = "in";
+	
 	private static final int MAX_NUMBER_RETURNED_ROWS = 1000;
+	
 	private static final Logger log = LogManager.getLogger(RingoverAPIWrapper.class);
 	
 	private String workingDirectory;
@@ -188,8 +192,9 @@ public class RingoverAPIWrapper {
 		if(calls != null) {
 			recordings = new LinkedList<CallRecording>();
 			
+			String direction = null;			
 			String recordingURL = null;
-			String recordingFileName = null;
+			String recordingFileName = null;			
 			for(Call call: calls.getCallList()) {
 				CallRecording recording = new CallRecording();
 				
@@ -222,9 +227,18 @@ public class RingoverAPIWrapper {
 				recording.setGroupHierachy(Integer.toString(call.getUser().getTeamId()));
 				// ANIs omitted
 				
-				// TODO Manage 'to' and 'from' number in IN/OUT calls
-				recording.setDnis(call.getToNumber());
-				
+				direction = call.getDirection();
+				if(direction != null) {
+					switch (direction.toLowerCase()){
+						case DIRECTION_IN:
+							recording.setDnis(call.getFromNumber());
+							break;
+						case DIRECTION_OUT:
+							recording.setDnis(call.getToNumber());
+							break;						
+					}
+				}
+								
 				recordings.add(recording);
 			}
 		}
