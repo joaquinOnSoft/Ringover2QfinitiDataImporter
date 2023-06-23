@@ -108,7 +108,7 @@ public class Ringover2QfinitiDataImporterLauncher {
 		} catch (org.apache.commons.cli.ParseException | java.text.ParseException | IllegalArgumentException
 				| IOException | InvalidFormatException e) {
 			formatter.printHelp(
-					"java -jar Ringover2QfinitiDataImporter23.2.jar -from 20230601 -to 20230621 -c ANSWERED", options);
+					"java -jar Ringover2QfinitiDataImporter-23.06.jar -from 20230601 -to 20230621 -c ANSWERED", options);
 
 			exitInError(e.getMessage());
 		}
