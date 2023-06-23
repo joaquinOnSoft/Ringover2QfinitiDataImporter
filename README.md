@@ -38,6 +38,6 @@ In case of success, the tool will generate an Excel file, by default called `cal
 
 | Path_Name	        | File_Name                   | Date_Time           | duration	| group_hierarchy | Team_Member_Name  | dnis         | 
 |-------------------|-----------------------------|---------------------|-----------|-----------------|-------------------|--------------|
-| \\MY-SERVER\calls	| 33600000000-33180800000.mp3 | 23/06/2023 09:50:42 | 22        | 9161459         | Tonioni, Federico |	346789456123 |
+| \\MY-SERVER\calls	| 33600000000-33180800000.mp3 | 23/06/2023 09:50:42 | 22        | 9161459         | Doe, Joe          |	346789456123 |
 
  This file can be used as input of `Qfiniti Data Import tool` in order to ingest the calls into **OpenText Explore**.
