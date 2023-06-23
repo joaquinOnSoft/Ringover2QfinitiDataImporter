@@ -33,9 +33,10 @@ public class Ringover2QfinitiDataImporterLauncher {
 
 		Option callTypeOption = new Option("c", "callType", true,
 				"Call type. Used to filter certain types of call. Possible values: \n"
-						+ "\t 'ANSWERED' filters answered calls. Default value. \n"
-						+ "\t 'MISSED' filters missed calls. \n" + "\t 'OUT' filters outgoing calls. \n"
-						+ "\t 'VOICEMAIL' filters calls ending on voicemail.");
+						+ "\t 'ANSWERED':  filters answered calls. Default value. \n"
+						+ "\t 'MISSED':    filters missed calls. \n"  						
+						+ "\t 'OUT':       filters outgoing calls. \n"
+						+ "\t 'VOICEMAIL': filters calls ending on voicemail.");
 		options.addOption(callTypeOption);
 
 		Option outputOption = new Option("o", "output", true, "Output file name. Default value: calls-yyyyMMdd.xls");
