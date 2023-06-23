@@ -27,7 +27,7 @@
             "star": null,
             "tags": null,
             "voicemail": null,
-            "record": null,
+            "record": "https://cdn.ringover.com/records/0-0/35537d8679f3e2-13-04-19-15h27-33600000000-33180800000.mp3",
             "fax": null,
             "user": {
                 "user_id": 11330955,
@@ -67,7 +67,7 @@
             "star": null,
             "tags": null,
             "voicemail": null,
-            "record": null,
+            "record": "https://cdn.ringover.com/records/0-0/35537d8679f3e2-13-04-19-15h27-33600000000-67880800000.mp3",
             "fax": null,
             "user": {
                 "user_id": 11330955,
@@ -107,7 +107,7 @@
             "star": null,
             "tags": null,
             "voicemail": null,
-            "record": null,
+            "record": "https://cdn.ringover.com/records/0-0/99997d8679f3e2-13-04-19-15h27-33600000000-33180800000.mp3",
             "fax": null,
             "user": {
                 "user_id": 11330955,
@@ -147,7 +147,7 @@
             "star": null,
             "tags": null,
             "voicemail": null,
-            "record": null,
+            "record": "https://cdn.ringover.com/records/0-0/22227d8679f3e2-13-04-19-15h27-33600000000-33180800000.mp3",
             "fax": null,
             "user": {
                 "user_id": 11330955,

@@ -2,6 +2,11 @@ package com.opentext.qfiniti.importer.ringover;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.LinkedList;
@@ -19,6 +24,16 @@ public class RingoverAPIWrapper {
 
 	private static final int MAX_NUMBER_RETURNED_ROWS = 1000;
 	private static final Logger log = LogManager.getLogger(RingoverAPIWrapper.class);
+	
+	private String workingDirectory;
+	
+	public RingoverAPIWrapper() {
+		this(System.getProperty("user.dir"));
+	}
+
+	public RingoverAPIWrapper(String workingDirectory) {
+		this.workingDirectory = workingDirectory;
+	}	
 	
 	/**
 	 * <strong>Get all calls</strong>
@@ -165,18 +180,33 @@ public class RingoverAPIWrapper {
 	 * Transforms a `TerminatedCalls` object to a List of `CallRecording`
 	 * @param calls -  `TerminatedCalls` object returned by Ringover API 
 	 * @return List of `CallRecording`
+	 * @throws IOException 
 	 */
-	private List<CallRecording> transform(TerminatedCalls calls){
+	private List<CallRecording> transform(TerminatedCalls calls) throws IOException{
 		List<CallRecording> recordings = null;
 
 		if(calls != null) {
 			recordings = new LinkedList<CallRecording>();
 			
+			String recordingURL = null;
+			String recordingFileName = null;
 			for(Call call: calls.getCallList()) {
 				CallRecording recording = new CallRecording();
 				
-				recording.setPathName(null); // TODO Add path
-				recording.setFileName(getFileNameFromURL(call.getRecord())); 								
+				//Path name should be a Universal Naming Convention (UNC) path
+				recording.setPathName(workingDirectory);
+				
+				recordingURL = call.getRecord();
+				if(recordingURL != null) {
+					recordingFileName = getFileNameFromURL(recordingURL);
+					
+					recording.setFileName(recordingFileName);
+					
+					//Download recording file (mp3) from recording URL 
+					InputStream in = new URL(recordingURL).openStream();
+					Files.copy(in, Paths.get(workingDirectory, recordingFileName), StandardCopyOption.REPLACE_EXISTING);					
+				}
+				
 				recording.setDuration(call.getTotalDuration());
 				
 				//"start_time": "2023-06-14T09:31:17.73Z"

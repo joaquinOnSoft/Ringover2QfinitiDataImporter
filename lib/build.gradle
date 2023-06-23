@@ -21,6 +21,15 @@ dependencies {
 	// https://mvnrepository.com/artifact/commons-cli/commons-cli
 	implementation 'commons-cli:commons-cli:1.5.0'   
 
+
+	// Apache POI Common
+	// https://mvnrepository.com/artifact/org.apache.poi/poi
+	implementation 'org.apache.poi:poi:5.2.3' 
+	// Apache POI API Based On OPC and OOXML Schemas
+	// https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
+	implementation 'org.apache.poi:poi-ooxml:5.2.3' 
+
+
 	// General data-binding functionality for Jackson: works on core streaming API	
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
 	implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
@@ -49,6 +58,7 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
 	implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
 
+
 	// API for SLF4J (The Simple Logging Facade for Java) which serves as a simple facade or 
 	// abstraction for various logging frameworks, allowing the end user to plug in the desired 
 	// logging framework at deployment time.
@@ -62,6 +72,27 @@ dependencies {
     // Module "junit-jupiter" of JUnit 5.    
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0-M1'
+	
+    // Mockito mock objects library core API and implementation	    
+	// https://mvnrepository.com/artifact/org.mockito/mockito-core
+	testImplementation 'org.mockito:mockito-core:5.4.0'
+
+
+	// PowerMock API for Mockito 2.+..
+	// https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito2
+	testImplementation 'org.powermock:powermock-api-mockito2:2.0.9'
+	// PowerMock support module for JUnit 4.x rules with Java agent		
+	// https://mvnrepository.com/artifact/org.powermock/powermock-module-junit4-rule-agent
+	testImplementation 'org.powermock:powermock-module-junit4-rule-agent:2.0.9'
+	// PowerMock support module for JUnit 4.x rules.
+	// https://mvnrepository.com/artifact/org.powermock/powermock-module-junit4-rule
+	testImplementation 'org.powermock:powermock-module-junit4-rule:2.0.9'
+	// PowerMock support module for JUnit 4.x.		
+	// https://mvnrepository.com/artifact/org.powermock/powermock-module-junit4
+	testImplementation 'org.powermock:powermock-module-junit4:2.0.9'
+	// PowerMock module for TestNG.		
+	// https://mvnrepository.com/artifact/org.powermock/powermock-module-testng
+	testImplementation 'org.powermock:powermock-module-testng:2.0.9'	
 }
 
 tasks.named('test') {
