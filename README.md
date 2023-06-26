@@ -41,3 +41,42 @@ In case of success, the tool will generate an Excel file, by default called `cal
 | \\MY-SERVER\calls	| 33600000000-33180800000.mp3 | 23/06/2023 09:50:42 | 22        | 9161459         | Doe, Joe          |	346789456123 |
 
  This file can be used as input of `Qfiniti Data Import tool` in order to ingest the calls into **OpenText Explore**.
+ 
+## Ringover API Key
+
+Ringover use API keys for authentication to authorize API requests. 
+
+### Generate a Ringover API key
+
+First, you need to create a public access token (API key) and select the appropriate rights for each user. To do so:
+
+ - Open the [Ringover Dashboard] (https://dashboard.ringover.com/).
+ - Click on `Developer > API`
+ 
+   ![Ringover developer API](images/ringover-developer-api.png)
+   
+ - Click on `Create an API key` button
+
+   ![Create an API key button](images/ringover-api-key.png) 
+   
+ - Select a user in the drop-down menu and enter a label for the key and click the Create button.
+    
+   ![Create an API key button](images/ringover-create-api-key-popup.png)
+   
+ - Click the Edit button corresponding to the API key and select the appropriate rights:
+    - Enable `Monitoring`
+    - Enable `Calls` Read permission
+    - Enable `Contacts` Read permission
+    - Enable `Users` Read permission
+    - Enable `Numbers` Read permission
+    - Enable `Monitoring` Read permission
+    - Enable `IVR` Read permission
+    - Enable `Conversations` Read permission
+                             
+   ![Ringover API key general information](images/ringover-api-key-general-information.png)   
+
+### ringover.properties
+
+```
+apiKey=RINGOVER_API_KEY
+```   
