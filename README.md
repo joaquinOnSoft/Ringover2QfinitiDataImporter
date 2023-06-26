@@ -50,7 +50,7 @@ Ringover use API keys for authentication to authorize API requests.
 
 First, you need to create a public access token (API key) and select the appropriate rights for each user. To do so:
 
- - Open the [Ringover Dashboard] (https://dashboard.ringover.com/).
+ - Open the [Ringover Dashboard](https://dashboard.ringover.com/).
  - Click on `Developer > API`
  
    ![Ringover developer API](images/ringover-developer-api.png)
@@ -76,6 +76,9 @@ First, you need to create a public access token (API key) and select the appropr
    ![Ringover API key general information](images/ringover-api-key-general-information.png)   
 
 ### ringover.properties
+
+You need to update the file `ringover.properties` located at `PROJECT-FOLDER\lib\src\main\resources` with your Ringover API key.
+The file looks like this:
 
 ```
 apiKey=RINGOVER_API_KEY
