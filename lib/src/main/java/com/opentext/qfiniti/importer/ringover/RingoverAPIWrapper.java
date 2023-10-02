@@ -226,9 +226,14 @@ public class RingoverAPIWrapper {
 
 						recording.setFileName(recordingFileName);
 
-						//Download recording file (mp3) from recording URL 
-						InputStream in = new URL(recordingURL).openStream();
-						Files.copy(in, Paths.get(workingDirectory, recordingFileName), StandardCopyOption.REPLACE_EXISTING);					
+						try {
+							//Download recording file (mp3) from recording URL 
+							InputStream in = new URL(recordingURL).openStream();
+							Files.copy(in, Paths.get(workingDirectory, recordingFileName), StandardCopyOption.REPLACE_EXISTING);
+						}
+						catch(IOException e) {
+							log.error("Download recording file (mp3) from recording URL: " + recordingFileName);
+						}
 					}
 
 					recording.setDuration(call.getTotalDuration());
