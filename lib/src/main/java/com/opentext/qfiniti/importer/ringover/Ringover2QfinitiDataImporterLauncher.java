@@ -46,6 +46,9 @@ public class Ringover2QfinitiDataImporterLauncher {
 		uncOption.setRequired(true);
 		options.addOption(uncOption);		
 		
+		Option discardOption = new Option("d", "discard", false, "Discard calls without audio file associated (false by default)");
+		options.addOption(discardOption);		
+		
 		CommandLineParser parser = new DefaultParser();
 		HelpFormatter formatter = new HelpFormatter();
 		CommandLine cmd = null;
@@ -53,6 +56,7 @@ public class Ringover2QfinitiDataImporterLauncher {
 		try {
 			cmd = parser.parse(options, args);
 
+			boolean discardCallsWithourAudio = false;
 			Date to = Calendar.getInstance().getTime();
 			Date from = DateUtil.datePlusXDays(to, -1);
 			CallType cType = CallType.ANSWERED;
@@ -89,9 +93,13 @@ public class Ringover2QfinitiDataImporterLauncher {
 			if (cmd.hasOption("unc") || cmd.hasOption("u")) {
 				uncPath = cmd.getOptionValue("unc");
 			}			
+			
+			if (cmd.hasOption("discard") || cmd.hasOption("d")) {
+				discardCallsWithourAudio = true;
+			}			
 						
 			RingoverAPIWrapper api = new RingoverAPIWrapper(uncPath);
-			List<CallRecording> recordings = api.getAllCalls(from, to, cType);
+			List<CallRecording> recordings = api.getAllCalls(from, to, cType, discardCallsWithourAudio);
 
 			if (recordings == null || recordings.size() == 0) {
 				System.out.println("No call recordings were found in the given period!");

@@ -25,7 +25,8 @@ public class RingoverAPIWrapper {
 	private static final String DIRECTION_OUT = "out";
 	private static final String DIRECTION_IN = "in";
 
-	private static final int MAX_NUMBER_RETURNED_ROWS = 1000;
+	//The API documentation set the limit to 1000, but an API call just returns 100
+	private static final int MAX_NUMBER_RETURNED_ROWS = 100;
 
 	private static final Logger log = LogManager.getLogger(RingoverAPIWrapper.class);
 
@@ -49,19 +50,19 @@ public class RingoverAPIWrapper {
 	 * @param startDate - Used to create a time cursor. Must be used with `endDate`
 	 * @param endDate - Used to create a time cursor. Must be used with `startDate` and the difference 
 	 * between the `startDate` and the `endDate` must not exceed 15 days.
-	 * @param limitCount - Restrict the number of returned rows (Max. 1000)
 	 * @param callType - Used to filter certain types of call. 'ANSWERED' filters answered calls. 
 	 * 'MISSED' filters missed calls. 'OUT' filters outgoing calls. 'VOICEMAIL' filters calls ending on voicemail.
-	 * 
+	 * @param discardCallsWithourAudio - Discard calls without audio file associated 
+	 *  
 	 * @throws IllegalArgumentException - 
 	 * @throws IOException - Properties file not found or no permissions 
 	 * @throws FileNotFoundException - Properties file not found 
 	 * 
 	 * @see <a href="https://mkyong.com/java/apache-httpclient-examples/">Apache HttpClient Examples</a>
 	 */	
-	public List<CallRecording> getAllCalls(Date startDate, Date endDate, CallType callType) 
+	public List<CallRecording> getAllCalls(Date startDate, Date endDate, CallType callType, boolean discardCallsWithourAudio) 
 			throws IllegalArgumentException, FileNotFoundException, IOException {
-		return getAllCalls(startDate, endDate, MAX_NUMBER_RETURNED_ROWS, callType);
+		return getAllCalls(startDate, endDate, MAX_NUMBER_RETURNED_ROWS, callType, discardCallsWithourAudio);
 	}
 
 	/**
@@ -85,7 +86,8 @@ public class RingoverAPIWrapper {
 	 * @see <a href="https://mkyong.com/java/apache-httpclient-examples/">Apache HttpClient Examples</a>
 	 */	
 	public List<CallRecording> getAllCalls(Date startDate, Date endDate, 
-			int limitCount, CallType callType) throws IllegalArgumentException, FileNotFoundException, IOException{
+			int limitCount, CallType callType, boolean discardCallsWithourAudio) 
+					throws IllegalArgumentException, FileNotFoundException, IOException{
 
 
 		List<CallRecording> recordings = null;
@@ -143,7 +145,7 @@ public class RingoverAPIWrapper {
 				log.info("Retrieved # calls: " + calls.getCallListCount());
 
 				if(calls != null && calls.getTotalCallCount() > 0) {
-					List<CallRecording> recordingsTmp = transform(calls);
+					List<CallRecording> recordingsTmp = transform(calls, discardCallsWithourAudio);
 
 					if(recordingsTmp != null && recordingsTmp.size() > 0) {
 						if(recordings == null) {
@@ -204,7 +206,7 @@ public class RingoverAPIWrapper {
 	 * @return List of `CallRecording`
 	 * @throws IOException 
 	 */
-	private List<CallRecording> transform(TerminatedCalls calls) throws IOException{
+	private List<CallRecording> transform(TerminatedCalls calls, boolean discardCallsWithourAudio) throws IOException{
 		List<CallRecording> recordings = null;
 
 		if(calls != null) {
@@ -271,6 +273,12 @@ public class RingoverAPIWrapper {
 						}
 					}
 
+					if((recording.getFileName() == null || recording.getFileName().compareTo("") == 0) 
+							&& discardCallsWithourAudio) {
+						log.debug("Skiping call without audio associated. DNIS: " + recording.getDnis());
+						continue;
+					}
+					
 					recordings.add(recording);
 				} // for
 			} //if
