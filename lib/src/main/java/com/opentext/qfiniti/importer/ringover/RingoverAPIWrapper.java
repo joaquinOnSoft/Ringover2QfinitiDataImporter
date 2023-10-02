@@ -122,10 +122,14 @@ public class RingoverAPIWrapper {
 			throw new IllegalArgumentException("You must provide the Start date end End date or none of them.");			
 		}
 		
+		log.info("Calls from " + startDateTmp  + " to + " + endDateTmp);
+		
 		if (limitCount < 0 || limitCount > RingoverAPI.MAX_LIMIT_COUNT) {
 			limitCount = RingoverAPI.MAX_LIMIT_COUNT;
 		}
 		
+		log.info("Limit count: " + limitCount);
+				
 		TerminatedCalls calls = null;
 		int numCallsRetrieved = 0;
 		int totalCallCount = 0; 
@@ -135,6 +139,9 @@ public class RingoverAPIWrapper {
 		do {
 			do {
 				calls = api.getAllCalls(startDateTmp, endDateTmp, limitCount, callType, lastIdReturned);
+				
+				log.info("Retrieved # calls: " + calls.getCallListCount());
+				
 				if(calls != null && calls.getTotalCallCount() > 0) {
 					List<CallRecording> recordingsTmp = transform(calls);
 					
@@ -143,6 +150,7 @@ public class RingoverAPIWrapper {
 							recordings = new LinkedList<CallRecording>();
 						}
 						
+						log.debug("Calls retrieved: " + recordingsTmp.size());
 						recordings.addAll(recordingsTmp);
 					}
 					
@@ -151,8 +159,12 @@ public class RingoverAPIWrapper {
 						totalCallCount = calls.getTotalCallCount();
 						firstCallInPeriod = false;
 					}
+
 					callListCount = calls.getCallListCount();
 					numCallsRetrieved += callListCount;
+					
+					log.info("Total # of calls retrieved: " + numCallsRetrieved);
+					
 					if(numCallsRetrieved <= totalCallCount) {
 						lastIdReturned = Integer.toString( calls.getCallList().get(callListCount - 1).getCdrId() );
 						
@@ -219,8 +231,15 @@ public class RingoverAPIWrapper {
 				try {
 					callStartTime = DateUtil.strToDate(call.getStartTime(), "yyyy-MM-dd'T'HH:mm:ss'.'SS'Z'");
 				} catch (ParseException e) {
-					log.error("Invalid date format. Expected: yyyy-MM-dd'T'HH:mm:ssZ", e);
+					log.error("Invalid date format (1). Expected: yyyy-MM-dd'T'HH:mm:ss'Z'", e);
+					
+					try {
+						callStartTime = DateUtil.strToDate(call.getStartTime(), "yyyy-MM-dd'T'HH:mm:ss'Z'");
+					} catch (ParseException e2) {
+						log.error("Invalid date format (2). Expected: yyyy-MM-dd'T'HH:mm:ssZ", e);
+					}
 				}
+				
 				//dateTime in format "dd/MM/yyyy HH:mm:ss"
 				recording.setDateTime(DateUtil.dateToFormat(callStartTime, "dd/MM/yyyy HH:mm:ss"));
 				recording.setTeamMemberName(call.getUser().getLastname() + ", " + call.getUser().getFirstname());

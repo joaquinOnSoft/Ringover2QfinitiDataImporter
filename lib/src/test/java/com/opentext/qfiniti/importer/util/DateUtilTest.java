@@ -67,6 +67,19 @@ public class DateUtilTest {
 			fail(e.getMessage());
 		}
 	}
+
+	@Test
+	public void testStrToDate2() {
+		final String strDate = "2023-09-15T08:54:30Z";
+		final String format = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+		try {
+			Date date = DateUtil.strToDate(strDate, format);
+			assertEquals("Fri Sep 15 08:54:30 CEST 2023", date.toString());
+		} catch (ParseException e) {
+			fail(e.getMessage());
+		}
+	}	
 	
 	@Test
 	public void dateToQfinitiFormat() {
