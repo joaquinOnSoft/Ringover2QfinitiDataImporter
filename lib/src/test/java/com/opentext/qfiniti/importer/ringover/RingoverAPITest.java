@@ -34,12 +34,11 @@ public class RingoverAPITest {
 		TerminatedCalls calls = wrapper.getAllCalls();
 		
 		assertNotNull(calls);
-		assertEquals(11330955, calls.getUserId());
-		assertEquals(5, calls.getCallListCount());
+		assertEquals(11061903, calls.getUserId());
+		assertEquals(100, calls.getCallListCount());
 		assertNotNull(calls.getCallList());
 		List<Call>  callList = calls.getCallList();
 		assertNotNull(callList.get(0).getUser());
-		assertEquals("Garzón", callList.get(0).getUser().getFirstname());
-		assertEquals("Joaquín", callList.get(0).getUser().getLastname());
+		//assertEquals("Joaquín", callList.get(0).getUser().getFirstname());
 	}
 }

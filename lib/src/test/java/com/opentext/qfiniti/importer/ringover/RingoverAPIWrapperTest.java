@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.Calendar;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -26,16 +26,22 @@ public class RingoverAPIWrapperTest {
 	@Test
 	public void getAllCalls() {
 		List<CallRecording> recordings = null;
-		Date end = Calendar.getInstance().getTime();
-		Date start = DateUtil.datePlusXDays(end, -15);
+		Date end = null;
+		try {
+			end = DateUtil.strToDate("2023-09-15 00:00:00", "yyyy-MM-dd HH:mm:ss");
+		} catch (ParseException e) {
+			fail("Invalid end date format. ", e);
+		}
+		
+		Date start = DateUtil.datePlusXDays(end, -3);
 		
 		try {
-			recordings = wrapper.getAllCalls(start, end, 1, CallType.ANSWERED);
+			recordings = wrapper.getAllCalls(start, end, 10, CallType.ANSWERED);
 		} catch (Exception e) {
 			fail(e);
 		}
 		
 		assertNotNull(recordings);
-		assertEquals(4, recordings.size());
+		assertEquals(49, recordings.size());
 	}
 }

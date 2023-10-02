@@ -24,13 +24,13 @@ public class RingoverAPIWrapper {
 
 	private static final String DIRECTION_OUT = "out";
 	private static final String DIRECTION_IN = "in";
-	
+
 	private static final int MAX_NUMBER_RETURNED_ROWS = 1000;
-	
+
 	private static final Logger log = LogManager.getLogger(RingoverAPIWrapper.class);
-	
+
 	private String workingDirectory;
-	
+
 	public RingoverAPIWrapper() {
 		this(System.getProperty("user.dir"));
 	}
@@ -38,7 +38,7 @@ public class RingoverAPIWrapper {
 	public RingoverAPIWrapper(String workingDirectory) {
 		this.workingDirectory = workingDirectory;
 	}	
-	
+
 	/**
 	 * <strong>Get all calls</strong>
 	 * <p>
@@ -63,7 +63,7 @@ public class RingoverAPIWrapper {
 			throws IllegalArgumentException, FileNotFoundException, IOException {
 		return getAllCalls(startDate, endDate, MAX_NUMBER_RETURNED_ROWS, callType);
 	}
-	
+
 	/**
 	 * <strong>Get all calls</strong>
 	 * <p>
@@ -86,10 +86,10 @@ public class RingoverAPIWrapper {
 	 */	
 	public List<CallRecording> getAllCalls(Date startDate, Date endDate, 
 			int limitCount, CallType callType) throws IllegalArgumentException, FileNotFoundException, IOException{
-				
-		
+
+
 		List<CallRecording> recordings = null;
-		
+
 		String lastIdReturned = null;
 		Date startDateTmp = null;
 		Date startDatePlus15Days = null;
@@ -99,7 +99,7 @@ public class RingoverAPIWrapper {
 		// Initialize Ringover API
 		//
 		RingoverAPI api = new RingoverAPI();
-		
+
 		//
 		// Validate parameters
 		//
@@ -107,8 +107,8 @@ public class RingoverAPIWrapper {
 			if (endDate.before(startDate)) {
 				throw new IllegalArgumentException("End date (" + endDate + ") must be posterior to Start date (" + startDate + ")");
 			}
-			
-			
+
+
 			startDateTmp = startDate;
 			startDatePlus15Days = DateUtil.datePlusXDays(startDate, 15);
 			if(endDate.after(startDatePlus15Days)) {
@@ -121,39 +121,39 @@ public class RingoverAPIWrapper {
 		else if (startDate != null || endDate != null) {
 			throw new IllegalArgumentException("You must provide the Start date end End date or none of them.");			
 		}
-		
+
 		log.info("Calls from " + startDateTmp  + " to + " + endDateTmp);
-		
+
 		if (limitCount < 0 || limitCount > RingoverAPI.MAX_LIMIT_COUNT) {
 			limitCount = RingoverAPI.MAX_LIMIT_COUNT;
 		}
-		
+
 		log.info("Limit count: " + limitCount);
-				
+
 		TerminatedCalls calls = null;
 		int numCallsRetrieved = 0;
 		int totalCallCount = 0; 
 		int callListCount = 0;
 		boolean firstCallInPeriod = true;
-		
+
 		do {
 			do {
 				calls = api.getAllCalls(startDateTmp, endDateTmp, limitCount, callType, lastIdReturned);
-				
+
 				log.info("Retrieved # calls: " + calls.getCallListCount());
-				
+
 				if(calls != null && calls.getTotalCallCount() > 0) {
 					List<CallRecording> recordingsTmp = transform(calls);
-					
+
 					if(recordingsTmp != null && recordingsTmp.size() > 0) {
 						if(recordings == null) {
 							recordings = new LinkedList<CallRecording>();
 						}
-						
+
 						log.debug("Calls retrieved: " + recordingsTmp.size());
 						recordings.addAll(recordingsTmp);
 					}
-					
+
 					// Update last call Id returned
 					if(firstCallInPeriod) {
 						totalCallCount = calls.getTotalCallCount();
@@ -162,23 +162,29 @@ public class RingoverAPIWrapper {
 
 					callListCount = calls.getCallListCount();
 					numCallsRetrieved += callListCount;
-					
+
 					log.info("Total # of calls retrieved: " + numCallsRetrieved);
-					
+
 					if(numCallsRetrieved <= totalCallCount) {
-						lastIdReturned = Integer.toString( calls.getCallList().get(callListCount - 1).getCdrId() );
-						
-						//Warning [Rate limit]: There is a 2-call per second limit applied to each request.
-				        try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							log.error("Sleeping between Ringover API calls.", e);
+						if(calls.getCallList() != null) {
+							lastIdReturned = Integer.toString( calls.getCallList().get(callListCount - 1).getCdrId() );
+	
+							//Warning [Rate limit]: There is a 2-call per second limit applied to each request.
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								log.error("Sleeping between Ringover API calls.", e);
+							}
+						}
+						else {
+							//Force exit loop
+							numCallsRetrieved = totalCallCount;
 						}
 					}
 				}
 			}
 			while(numCallsRetrieved < totalCallCount);
-			
+
 			startDateTmp = endDateTmp;
 			if(DateUtil.datePlusXDays(endDateTmp, 15).after(endDate)) {
 				endDateTmp = endDate;
@@ -188,10 +194,10 @@ public class RingoverAPIWrapper {
 			}
 		}
 		while(endDateTmp.before(endDateTmp));
-		
+
 		return recordings;
 	}	
-		
+
 	/**
 	 * Transforms a `TerminatedCalls` object to a List of `CallRecording`
 	 * @param calls -  `TerminatedCalls` object returned by Ringover API 
@@ -203,68 +209,71 @@ public class RingoverAPIWrapper {
 
 		if(calls != null) {
 			recordings = new LinkedList<CallRecording>();
-			
+
 			String direction = null;			
 			String recordingURL = null;
-			String recordingFileName = null;			
-			for(Call call: calls.getCallList()) {
-				CallRecording recording = new CallRecording();
-				
-				//Path name should be a Universal Naming Convention (UNC) path
-				recording.setPathName(workingDirectory);
-				
-				recordingURL = call.getRecord();
-				if(recordingURL != null) {
-					recordingFileName = getFileNameFromURL(recordingURL);
-					
-					recording.setFileName(recordingFileName);
-					
-					//Download recording file (mp3) from recording URL 
-					InputStream in = new URL(recordingURL).openStream();
-					Files.copy(in, Paths.get(workingDirectory, recordingFileName), StandardCopyOption.REPLACE_EXISTING);					
-				}
-				
-				recording.setDuration(call.getTotalDuration());
-				
-				//"start_time": "2023-06-14T09:31:17.73Z"
-				Date callStartTime = null;
-				try {
-					callStartTime = DateUtil.strToDate(call.getStartTime(), "yyyy-MM-dd'T'HH:mm:ss'.'SS'Z'");
-				} catch (ParseException e) {
-					log.error("Invalid date format (1). Expected: yyyy-MM-dd'T'HH:mm:ss'Z'", e);
-					
-					try {
-						callStartTime = DateUtil.strToDate(call.getStartTime(), "yyyy-MM-dd'T'HH:mm:ss'Z'");
-					} catch (ParseException e2) {
-						log.error("Invalid date format (2). Expected: yyyy-MM-dd'T'HH:mm:ssZ", e);
+			String recordingFileName = null;	
+			if(calls != null && calls.getCallList() != null) {
+				for(Call call: calls.getCallList()) {
+					CallRecording recording = new CallRecording();
+
+					//Path name should be a Universal Naming Convention (UNC) path
+					recording.setPathName(workingDirectory);
+
+					recordingURL = call.getRecord();
+					if(recordingURL != null) {
+						recordingFileName = getFileNameFromURL(recordingURL);
+
+						recording.setFileName(recordingFileName);
+
+						//Download recording file (mp3) from recording URL 
+						InputStream in = new URL(recordingURL).openStream();
+						Files.copy(in, Paths.get(workingDirectory, recordingFileName), StandardCopyOption.REPLACE_EXISTING);					
 					}
-				}
-				
-				//dateTime in format "dd/MM/yyyy HH:mm:ss"
-				recording.setDateTime(DateUtil.dateToFormat(callStartTime, "dd/MM/yyyy HH:mm:ss"));
-				recording.setTeamMemberName(call.getUser().getLastname() + ", " + call.getUser().getFirstname());
-				recording.setGroupHierachy(Integer.toString(call.getUser().getTeamId()));
-				// ANIs omitted
-				
-				direction = call.getDirection();
-				if(direction != null) {
-					switch (direction.toLowerCase()){
+
+					recording.setDuration(call.getTotalDuration());
+
+					//"start_time": "2023-06-14T09:31:17.73Z"
+					Date callStartTime = null;
+					String startTimeStr = call.getStartTime();
+					try {
+						callStartTime = DateUtil.strToDate(startTimeStr, "yyyy-MM-dd'T'HH:mm:ss'.'SS'Z'");
+					} catch (ParseException e) {
+						log.info("Invalid date format (1). " + startTimeStr + " - Expected: yyyy-MM-dd'T'HH:mm:ss'.'SS'Z'");
+
+						try {
+							callStartTime = DateUtil.strToDate(call.getStartTime(), "yyyy-MM-dd'T'HH:mm:ss'Z'");
+						} catch (ParseException e2) {
+							log.error("Invalid date format (2). Expected: yyyy-MM-dd'T'HH:mm:ssZ", e);
+						}
+					}
+
+					//dateTime in format "dd/MM/yyyy HH:mm:ss"
+					recording.setDateTime(DateUtil.dateToFormat(callStartTime, "dd/MM/yyyy HH:mm:ss"));
+					recording.setTeamMemberName(call.getUser().getLastname() + ", " + call.getUser().getFirstname());
+					recording.setGroupHierachy(Integer.toString(call.getUser().getTeamId()));
+					// ANIs omitted
+
+					direction = call.getDirection();
+					if(direction != null) {
+						switch (direction.toLowerCase()){
 						case DIRECTION_IN:
 							recording.setDnis(call.getFromNumber());
 							break;
 						case DIRECTION_OUT:
 							recording.setDnis(call.getToNumber());
 							break;						
+						}
 					}
-				}
-								
-				recordings.add(recording);
-			}
+
+					recordings.add(recording);
+				} // for
+			} //if
 		}
-		
+
 		return recordings;
 	}
-	
+
 	/**
 	 * <p>
 	 * Provides the name of the call recording file from call recording URL
@@ -277,14 +286,14 @@ public class RingoverAPIWrapper {
 	 */
 	private String getFileNameFromURL(String url) {
 		String fileName = null;
-		
+
 		if(url != null) {
 			String tokens[] = url.split("/");
 			int size = tokens.length;
-			
+
 			fileName = tokens[size - 1];
 		}
-		
+
 		return fileName;
 	}
 }
