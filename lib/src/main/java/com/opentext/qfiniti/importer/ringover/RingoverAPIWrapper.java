@@ -267,10 +267,14 @@ public class RingoverAPIWrapper {
 						switch (direction.toLowerCase()){
 						case DIRECTION_IN:
 							recording.setDnis(call.getFromNumber());
+							recording.setDirection(CallRecording.DIRECTION_INBOUND);
 							break;
 						case DIRECTION_OUT:
 							recording.setDnis(call.getToNumber());
-							break;						
+							recording.setDirection(CallRecording.DIRECTION_OUTBOUND);
+							break;
+						default:
+							recording.setDirection(CallRecording.DIRECTION_UNKNOWN);
 						}
 					}
 

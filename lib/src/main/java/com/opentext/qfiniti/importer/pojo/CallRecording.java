@@ -37,6 +37,18 @@ import com.opentext.qfiniti.importer.IConfigGeneratorHeader;
 public class CallRecording implements IConfigGeneratorHeader {
 	private static final Logger log = LogManager.getLogger(CallRecording.class);
 
+	/**
+	 * Direction of the call. Must be a number 0-2:
+	 * <ul>
+	 * 		<li>0 – Unknown</li>
+	 * 		<li>1 – Inbound</li>
+	 * 		<li>2 – Outbound</li>
+	 * </ul>
+	 * */
+	public static final int DIRECTION_UNKNOWN = 0;
+	public static final int DIRECTION_INBOUND = 1;
+	public static final int DIRECTION_OUTBOUND = 2;
+	
 	public static final String DEFAULT_AGENT_NAME = "Juan Esposito Esposito";
 
 	private String pathName;
@@ -51,12 +63,15 @@ public class CallRecording implements IConfigGeneratorHeader {
 	
 	private String userData;
 	private String userDataDelimiter;
+	
+	private int direction;
 
 	private Map<String, String> extendedFields;
 
 	public CallRecording() {
 		this(null, null, 0);
 		this.userDataDelimiter = "#";
+		this.direction = DIRECTION_UNKNOWN;
 	}
 
 	public CallRecording(String pathName, String fileName, int duration) {
@@ -240,6 +255,14 @@ public class CallRecording implements IConfigGeneratorHeader {
 	public void setDnis(String dnis) {
 		this.dnis = dnis;
 	}
+	
+	public int getDirection() {
+		return direction;
+	}
+
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
 
 	/**
 	 * Returns header titles for all the fields which has a value
@@ -273,6 +296,8 @@ public class CallRecording implements IConfigGeneratorHeader {
 		if (userData != null) {
 			header.add(HEADER_USER_DATA);
 		}		
+		
+		header.add(HEADER_CALL_DIRECTION);
 		
 		return header.toArray(new String[header.size()]);
 	}
@@ -333,11 +358,17 @@ public class CallRecording implements IConfigGeneratorHeader {
 		StringBuilder builder = new StringBuilder();
 		// Path_Name File_Name Date_Time duration
 
-		builder.append("{\n\t").append("Path_Name: ").append(pathName).append("\n\t").append("File_Name: ")
-				.append(fileName).append("\n\t").append("Date_Time: ").append(getDateTimeAsString()).append("\n\t")
-				.append("duration: ").append(duration).append("\n\t").append("Team_Member_Name: ")
-				.append(teamMemberName).append("\n\t").append("group_hierarchy: ").append(groupHierachy).append("\n\t")
-				.append("ani: ").append(ani).append("\n\t").append("dnis: ").append(dnis).append("\n").append("}");
+		builder.append("{\n\t")
+				.append("Path_Name: ").append(pathName).append("\n\t")
+				.append("File_Name: ").append(fileName).append("\n\t")
+				.append("Date_Time: ").append(getDateTimeAsString()).append("\n\t")
+				.append("duration: ").append(duration).append("\n\t")
+				.append("Team_Member_Name: ").append(teamMemberName).append("\n\t")
+				.append("group_hierarchy: ").append(groupHierachy).append("\n\t")
+				.append("ani: ").append(ani).append("\n\t")
+				.append("dnis: ").append(dnis).append("\n\t")
+				.append("call_direction: ").append(direction).append("\n")
+				.append("}");
 
 		return builder.toString();
 	}

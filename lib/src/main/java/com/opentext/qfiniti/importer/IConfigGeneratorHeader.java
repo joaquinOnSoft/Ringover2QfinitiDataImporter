@@ -10,4 +10,5 @@ public interface IConfigGeneratorHeader {
 	public static final String HEADER_ANI = "ani";
 	public static final String HEADER_DNIS = "dnis";
 	public static final String HEADER_USER_DATA = "user_data";
+	public static final String HEADER_CALL_DIRECTION = "call_direction";
 }
