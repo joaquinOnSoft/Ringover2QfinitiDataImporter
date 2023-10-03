@@ -22,6 +22,7 @@ import com.opentext.qfiniti.importer.util.DateUtil;
 
 public class RingoverAPIWrapper {
 
+	private static final String PROPERTY_USER_DIR = "user.dir";
 	private static final String DIRECTION_OUT = "out";
 	private static final String DIRECTION_IN = "in";
 
@@ -33,7 +34,7 @@ public class RingoverAPIWrapper {
 	private String workingDirectory;
 
 	public RingoverAPIWrapper() {
-		this(System.getProperty("user.dir"));
+		this(System.getProperty(PROPERTY_USER_DIR));
 	}
 
 	public RingoverAPIWrapper(String workingDirectory) {
@@ -124,7 +125,7 @@ public class RingoverAPIWrapper {
 			throw new IllegalArgumentException("You must provide the Start date end End date or none of them.");			
 		}
 
-		log.info("Calls from " + startDateTmp  + " to + " + endDateTmp);
+		log.info("Calls FROM " + startDateTmp  + " TO " + endDateTmp);
 
 		if (limitCount < 0 || limitCount > RingoverAPI.MAX_LIMIT_COUNT) {
 			limitCount = RingoverAPI.MAX_LIMIT_COUNT;

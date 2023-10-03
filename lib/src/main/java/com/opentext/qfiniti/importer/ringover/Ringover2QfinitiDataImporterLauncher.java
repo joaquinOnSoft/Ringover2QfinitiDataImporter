@@ -20,18 +20,56 @@ import com.opentext.qfiniti.importer.pojo.CallRecording;
 import com.opentext.qfiniti.importer.util.DateUtil;
 
 public class Ringover2QfinitiDataImporterLauncher {
+
+	/** From date. Format: yyyymmdd. Default value: yesterday */
+	private static final String LONG_OPT_FROM = "from";
+	private static final String SHORT_OPT_FROM = "f";
+	
+	/** To date. Format: yyyymmdd. Default value: today */
+	private static final String LONG_OPT_TO = "to";
+	private static final String SHORT_OPT_TO = "t";
+	
+	/**
+	 * Call type. Used to filter certain types of call. Possible values:
+	 * 		'ANSWERED':  filters answered calls. Default value.
+	 * 		'MISSED':    filters missed calls.			
+	 * 		'OUT':       filters outgoing calls. 
+	 * 		'VOICEMAIL': filters calls ending on voicemail.
+	 */
+	private static final String LONG_OPT_CALL_TYPE = "callType";
+	private static final String SHORT_OPT_CALL_TYPE = "c";	
+	
+	/**
+	 * Discard calls without audio file associated (false by default)
+	 */
+	private static final String LONG_OPT_DISCARD = "discard";
+	private static final String SHORT_OPT_DISCARD = "d";
+
+	
+	/**
+	 * Universal Naming Convention (UNC) path to store the call recording files, i.e. \\SERVER\recordings
+	 */
+	private static final String LONG_OPT_UNC = "unc";
+	private static final String SHORT_OPT_UNC = "u";	
+	
+	/**
+	 * Output file name. Default value: calls-yyyyMMdd.xls
+	 */
+	private static final String LONG_OPT_OUTPUT = "output";
+	private static final String SHORT_OPT_OUTPUT = "o";	
+	
 	private static final Logger log = LogManager.getLogger(Ringover2QfinitiDataImporterLauncher.class);
 
 	public static void main(String[] args) {
 		Options options = new Options();
 
-		Option fromOption = new Option("f", "from", true, "From date. Format: yyyymmdd. Default value: yesterday");
+		Option fromOption = new Option(SHORT_OPT_FROM, LONG_OPT_FROM, true, "From date. Format: yyyymmdd. Default value: yesterday");
 		options.addOption(fromOption);
 
-		Option toOption = new Option("t", "to", true, "To date. Format: yyyymmdd. Default value: today");
+		Option toOption = new Option(SHORT_OPT_TO, LONG_OPT_TO, true, "To date. Format: yyyymmdd. Default value: today");
 		options.addOption(toOption);
 
-		Option callTypeOption = new Option("c", "callType", true,
+		Option callTypeOption = new Option(SHORT_OPT_CALL_TYPE, LONG_OPT_CALL_TYPE, true,
 				"Call type. Used to filter certain types of call. Possible values: \n"
 						+ "\t 'ANSWERED':  filters answered calls. Default value. \n"
 						+ "\t 'MISSED':    filters missed calls. \n"  						
@@ -39,14 +77,14 @@ public class Ringover2QfinitiDataImporterLauncher {
 						+ "\t 'VOICEMAIL': filters calls ending on voicemail.");
 		options.addOption(callTypeOption);
 
-		Option outputOption = new Option("o", "output", true, "Output file name. Default value: calls-yyyyMMdd.xls");
+		Option outputOption = new Option(SHORT_OPT_OUTPUT, LONG_OPT_OUTPUT, true, "Output file name. Default value: calls-yyyyMMdd.xls");
 		options.addOption(outputOption);
 
-		Option uncOption = new Option("u", "unc", true, "Universal Naming Convention (UNC) path to store the call recording files, i.e. \\\\SERVER\\recordings");
+		Option uncOption = new Option(SHORT_OPT_UNC, LONG_OPT_UNC, true, "Universal Naming Convention (UNC) path to store the call recording files, i.e. \\\\SERVER\\recordings");
 		uncOption.setRequired(true);
 		options.addOption(uncOption);		
 		
-		Option discardOption = new Option("d", "discard", false, "Discard calls without audio file associated (false by default)");
+		Option discardOption = new Option(SHORT_OPT_DISCARD, LONG_OPT_DISCARD, false, "Discard calls without audio file associated (false by default)");
 		options.addOption(discardOption);		
 		
 		CommandLineParser parser = new DefaultParser();
@@ -65,36 +103,36 @@ public class Ringover2QfinitiDataImporterLauncher {
 					+ ".xls";
 			String uncPath = null;
 
-			if (cmd.hasOption("from") || cmd.hasOption("f")) {
-				String fromStr = cmd.getOptionValue("from");
+			if (cmd.hasOption(LONG_OPT_FROM) || cmd.hasOption(SHORT_OPT_FROM)) {
+				String fromStr = cmd.getOptionValue(LONG_OPT_FROM);
 				if (fromStr != null) {
 					from = DateUtil.strToDate(fromStr, "yyyyMMdd");
 				}
 			}
 
-			if (cmd.hasOption("to") || cmd.hasOption("t")) {
-				String toStr = cmd.getOptionValue("to");
+			if (cmd.hasOption(LONG_OPT_TO) || cmd.hasOption(SHORT_OPT_TO)) {
+				String toStr = cmd.getOptionValue(LONG_OPT_TO);
 				if (toStr != null) {
 					to = DateUtil.strToDate(toStr, "yyyyMMdd");
 				}
 			}
 
-			if (cmd.hasOption("callType") || cmd.hasOption("c")) {
-				String callTypeStr = cmd.getOptionValue("callType");
+			if (cmd.hasOption(LONG_OPT_CALL_TYPE) || cmd.hasOption(SHORT_OPT_CALL_TYPE)) {
+				String callTypeStr = cmd.getOptionValue(LONG_OPT_CALL_TYPE);
 				if (callTypeStr != null) {
 					cType = CallType.valueOf(callTypeStr);
 				}
 			}
 
-			if (cmd.hasOption("output") || cmd.hasOption("o")) {
-				outputFileName = cmd.getOptionValue("output");
+			if (cmd.hasOption(LONG_OPT_OUTPUT) || cmd.hasOption(SHORT_OPT_OUTPUT)) {
+				outputFileName = cmd.getOptionValue(LONG_OPT_OUTPUT);
 			}
 
-			if (cmd.hasOption("unc") || cmd.hasOption("u")) {
-				uncPath = cmd.getOptionValue("unc");
+			if (cmd.hasOption(LONG_OPT_UNC) || cmd.hasOption(SHORT_OPT_UNC)) {
+				uncPath = cmd.getOptionValue(LONG_OPT_UNC);
 			}			
 			
-			if (cmd.hasOption("discard") || cmd.hasOption("d")) {
+			if (cmd.hasOption(LONG_OPT_DISCARD) || cmd.hasOption(SHORT_OPT_DISCARD)) {
 				discardCallsWithourAudio = true;
 			}			
 						

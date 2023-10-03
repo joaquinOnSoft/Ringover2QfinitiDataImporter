@@ -1,9 +1,8 @@
 package com.opentext.qfiniti.importer.ringover;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.Properties;
 
@@ -113,13 +112,17 @@ public class RingoverAPI {
      * @throws IOException
      */
     public RingoverAPI() throws FileNotFoundException, IOException {
-    	File f = FileUtil.getFileFromResources(RINGOVER_PROPERTIES_FILE_NAME);
+    	InputStream InputStream = FileUtil.getStreamFromResources(RINGOVER_PROPERTIES_FILE_NAME);
     	
-    	if(f != null && f.exists()) {
+    	if(InputStream != null) {
 	    	Properties prop = new Properties();
-	    	prop.load(new FileInputStream(f));
+	    	prop.load(InputStream);
 	    	
 	    	this.apiKey = prop.getProperty(RINGOVER_API_KEY);
+	    	log.debug("Log API key read from properties");
+    	}
+    	else {
+    		log.warn(RINGOVER_PROPERTIES_FILE_NAME + " file NOT found!!!");
     	}
     }
 
