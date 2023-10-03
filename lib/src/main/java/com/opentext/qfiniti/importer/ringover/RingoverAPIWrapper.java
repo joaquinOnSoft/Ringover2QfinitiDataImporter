@@ -275,7 +275,7 @@ public class RingoverAPIWrapper {
 
 					if((recording.getFileName() == null || recording.getFileName().compareTo("") == 0) 
 							&& discardCallsWithourAudio) {
-						log.debug("Skiping call without audio associated. DNIS: " + recording.getDnis());
+						log.debug("Skiping call without audio associated. DNIS: " + recording.getDnis() + " Date: " + recording.getDateTimeAsString());
 						continue;
 					}
 					
