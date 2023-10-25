@@ -84,7 +84,7 @@ dependencies {
 	implementation 'org.apache.logging.log4j:log4j-core:2.21.0'
 	// The Apache Log4j SLF4J 2.0 API binding to Log4j 2 Core
 	// https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j2-impl
-	testImplementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.21.0'
+	// testImplementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.21.0'
 
 
 	// API for SLF4J (The Simple Logging Facade for Java) which serves as a simple facade or 
@@ -95,8 +95,7 @@ dependencies {
 	// Binding/provider for SLF4J, which outputs all events to System.err. Only messages of level INFO and higher are printed.	
 	// https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
 	testImplementation 'org.slf4j:slf4j-simple:2.0.9'
-
-
+	
 	
     // Module "junit-jupiter" of JUnit 5.    
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
