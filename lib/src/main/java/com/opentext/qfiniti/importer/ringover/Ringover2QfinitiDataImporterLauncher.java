@@ -57,6 +57,13 @@ public class Ringover2QfinitiDataImporterLauncher {
 	 */
 	private static final String LONG_OPT_OUTPUT = "output";
 	private static final String SHORT_OPT_OUTPUT = "o";	
+
+	/**
+	 * Apply .mp3 to .wav conversion (using ffmpeg). 
+	 * NOTE: ffmpeg must be in the PATH
+	 */
+	private static final String LONG_OPT_WAV_CONVERSION = "wav";
+	private static final String SHORT_OPT_WAV_CONVERSION = "w";		
 	
 	private static final Logger log = LogManager.getLogger(Ringover2QfinitiDataImporterLauncher.class);
 
@@ -86,6 +93,9 @@ public class Ringover2QfinitiDataImporterLauncher {
 		
 		Option discardOption = new Option(SHORT_OPT_DISCARD, LONG_OPT_DISCARD, false, "Discard calls without audio file associated (false by default)");
 		options.addOption(discardOption);		
+
+		Option wavConversionOption = new Option(SHORT_OPT_WAV_CONVERSION, LONG_OPT_WAV_CONVERSION, false, "Apply .mp3 to .wav conversion (using ffmpeg)");
+		options.addOption(wavConversionOption);			
 		
 		CommandLineParser parser = new DefaultParser();
 		HelpFormatter formatter = new HelpFormatter();
@@ -94,6 +104,7 @@ public class Ringover2QfinitiDataImporterLauncher {
 		try {
 			cmd = parser.parse(options, args);
 
+			boolean wavConversion = false;
 			boolean discardCallsWithourAudio = false;
 			Date to = Calendar.getInstance().getTime();
 			Date from = DateUtil.datePlusXDays(to, -1);
@@ -135,9 +146,13 @@ public class Ringover2QfinitiDataImporterLauncher {
 			if (cmd.hasOption(LONG_OPT_DISCARD) || cmd.hasOption(SHORT_OPT_DISCARD)) {
 				discardCallsWithourAudio = true;
 			}			
-						
+
+			if (cmd.hasOption(LONG_OPT_WAV_CONVERSION) || cmd.hasOption(SHORT_OPT_WAV_CONVERSION)) {
+				wavConversion = true;
+			}				
+			
 			RingoverAPIWrapper api = new RingoverAPIWrapper(uncPath);
-			List<CallRecording> recordings = api.getAllCalls(from, to, cType, discardCallsWithourAudio);
+			List<CallRecording> recordings = api.getAllCalls(from, to, cType, discardCallsWithourAudio, wavConversion);
 
 			if (recordings == null || recordings.size() == 0) {
 				System.out.println("No call recordings were found in the given period!");

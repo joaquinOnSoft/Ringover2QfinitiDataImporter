@@ -36,7 +36,7 @@ public class RingoverAPIWrapperTest {
 		Date start = DateUtil.datePlusXDays(end, -3);
 		
 		try {
-			recordings = wrapper.getAllCalls(start, end, 10, CallType.ANSWERED, false);
+			recordings = wrapper.getAllCalls(start, end, 10, CallType.ANSWERED, false, false);
 		} catch (Exception e) {
 			fail(e);
 		}
