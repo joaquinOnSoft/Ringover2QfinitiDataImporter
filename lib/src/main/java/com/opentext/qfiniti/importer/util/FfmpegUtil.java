@@ -16,11 +16,11 @@ public class FfmpegUtil {
 	public static int convertMp32Wav(File mp3, File wav) {
 		int exitValue = -1;
 		
-		// -i url (input)  input file url
-		// -y (global)     Overwrite output files without asking.
+		// ffmpeg options_
+		//   -i url (input)  input file url
+		//   -y (global)     Overwrite output files without asking.
 		// https://ffmpeg.org/ffmpeg.html#Main-options
 		String[] cmd={getFfmpegExeName(),"-y", "-i", mp3.getAbsolutePath(), wav.getAbsolutePath()};
-
 		
 		try {
 			Process process = Runtime.getRuntime().exec(cmd);

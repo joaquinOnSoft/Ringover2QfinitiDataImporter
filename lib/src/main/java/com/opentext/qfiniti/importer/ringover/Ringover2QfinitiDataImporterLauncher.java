@@ -165,7 +165,9 @@ public class Ringover2QfinitiDataImporterLauncher {
 				System.out.println("Call recordings found: " + recordings.size());
 
 				if(wavConversion == true) {
-					log.debug("Initializing wav conversion");
+					log.debug("Initializing MP3 to WAV conversion...");
+					Mp32WavConverter converter = new Mp32WavConverter();
+					recordings = converter.convert(recordings);
 				}
 				
 				CallRecording recording = recordings.get(0);
