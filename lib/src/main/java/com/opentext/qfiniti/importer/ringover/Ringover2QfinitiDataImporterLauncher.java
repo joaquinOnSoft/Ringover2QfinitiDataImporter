@@ -164,6 +164,10 @@ public class Ringover2QfinitiDataImporterLauncher {
 			} else {
 				System.out.println("Call recordings found: " + recordings.size());
 
+				if(wavConversion == true) {
+					log.debug("Initializing wav conversion");
+				}
+				
 				CallRecording recording = recordings.get(0);
 
 				ExcelWriter writer = new ExcelWriter();
