@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class FfmpegHelperTest {
+public class FfmpegUtilTest {
 
 	@Test
 	public void isFfmpegInPath() {
-		assertTrue(FfmpegHelper.isFfmpegInPath());
+		assertTrue(FfmpegUtil.isFfmpegInPath());
 	}
 }

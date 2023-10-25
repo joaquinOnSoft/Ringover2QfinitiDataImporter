@@ -18,6 +18,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import com.opentext.qfiniti.importer.io.ExcelWriter;
 import com.opentext.qfiniti.importer.pojo.CallRecording;
 import com.opentext.qfiniti.importer.util.DateUtil;
+import com.opentext.qfiniti.importer.util.FfmpegUtil;
 
 public class Ringover2QfinitiDataImporterLauncher {
 
@@ -149,10 +150,14 @@ public class Ringover2QfinitiDataImporterLauncher {
 
 			if (cmd.hasOption(LONG_OPT_WAV_CONVERSION) || cmd.hasOption(SHORT_OPT_WAV_CONVERSION)) {
 				wavConversion = true;
+				
+				if(!FfmpegUtil.isFfmpegInPath()) {
+					exitInError(" 'ffmpeg' NOT found in PATH.\n It's mandatory when using --wav argument.\n Update your PATH and try again.\n");
+				}
 			}				
 			
 			RingoverAPIWrapper api = new RingoverAPIWrapper(uncPath);
-			List<CallRecording> recordings = api.getAllCalls(from, to, cType, discardCallsWithourAudio, wavConversion);
+			List<CallRecording> recordings = api.getAllCalls(from, to, cType, discardCallsWithourAudio);
 
 			if (recordings == null || recordings.size() == 0) {
 				System.out.println("No call recordings were found in the given period!");

@@ -60,8 +60,6 @@ public class RingoverAPIWrapper {
 	 *                                 calls. 'VOICEMAIL' filters calls ending on
 	 *                                 voicemail.
 	 * @param discardCallsWithourAudio Discard calls without audio file associated
-	 * @param wavConversion            Apply .mp3 to .wav conversion (using
-	 *                                 ffmpeg)
 	 * 
 	 * @throws IllegalArgumentException 
 	 * @throws IOException              Properties file not found or no
@@ -72,11 +70,10 @@ public class RingoverAPIWrapper {
 	 *      HttpClient Examples</a>
 	 */
 	public List<CallRecording> getAllCalls(Date startDate, Date endDate, CallType callType,
-			boolean discardCallsWithourAudio, boolean wavConversion)
+			boolean discardCallsWithourAudio)
 			throws IllegalArgumentException, FileNotFoundException, IOException {
 
-		return getAllCalls(startDate, endDate, MAX_NUMBER_RETURNED_ROWS, callType, discardCallsWithourAudio,
-				wavConversion);
+		return getAllCalls(startDate, endDate, MAX_NUMBER_RETURNED_ROWS, callType, discardCallsWithourAudio);
 	}
 
 	/**
@@ -100,7 +97,6 @@ public class RingoverAPIWrapper {
 	 *                                 calls. 'VOICEMAIL' filters calls ending on
 	 *                                 voicemail.
 	 * @param discardCallsWithourAudio Discard calls without audio file associated
-	 * @param wavConversion            Apply .mp3 to .wav conversion (using ffmpeg)
 	 * 
 	 * @throws IllegalArgumentException
 	 * @throws IOException              Properties file not found or no permissions
@@ -110,7 +106,7 @@ public class RingoverAPIWrapper {
 	 *      HttpClient Examples</a>
 	 */
 	public List<CallRecording> getAllCalls(Date startDate, Date endDate, int limitCount, CallType callType,
-			boolean discardCallsWithourAudio, boolean wavConversion)
+			boolean discardCallsWithourAudio)
 			throws IllegalArgumentException, FileNotFoundException, IOException {
 
 		List<CallRecording> recordings = null;
