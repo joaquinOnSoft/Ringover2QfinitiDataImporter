@@ -172,7 +172,16 @@ public class RingoverAPIWrapper {
 						}
 
 						log.debug("Calls retrieved: " + recordingsTmp.size());
-						recordings.addAll(recordingsTmp);
+						for(CallRecording c: recordingsTmp) {
+							if(recordings.contains(c)) {
+								log.info("<-- Call duplicated (SKIPPED): " + c.getId());
+							}
+							else {
+								log.info("--> Call added: " + c.getId());
+								recordings.add(c);
+							}
+						}
+						//recordings.addAll(recordingsTmp);
 					}
 
 					// Update last call Id returned
@@ -190,10 +199,10 @@ public class RingoverAPIWrapper {
 						if (calls.getCallList() != null) {
 							lastIdReturned = Integer.toString(calls.getCallList().get(callListCount - 1).getCdrId());
 
-							// Warning [Rate limit]: There is a 2-call per second limit applied to each
-							// request.
+							// Warning [Rate limit]: There is a 2-call per second limit 
+							// applied to each request.
 							try {
-								Thread.sleep(1000);
+								Thread.sleep(500);
 							} catch (InterruptedException e) {
 								log.error("Sleeping between Ringover API calls.", e);
 							}
@@ -224,10 +233,10 @@ public class RingoverAPIWrapper {
 	 * @throws IOException
 	 */
 	private List<CallRecording> transform(TerminatedCalls calls, boolean discardCallsWithourAudio) throws IOException {
-		Map<String, CallRecording> recordings = null;
+		List<CallRecording> recordings = null;
 
 		if (calls != null) {
-			recordings = new HashMap<String, CallRecording>();
+			recordings = new LinkedList<CallRecording>();
 
 			String direction = null;
 			String recordingURL = null;
@@ -329,18 +338,12 @@ public class RingoverAPIWrapper {
 						continue;
 					}
 
-					if(recordings.containsKey(recording.getId())) {
-						log.info("<-- Recording previously inserted. Skipped: " + recording.getId());						
-					}
-					else {
-						log.info("--> Recording  inserted: " + recording.getId());
-						recordings.put(recording.getId(), recording);						
-					}
+					recordings.add(recording);
 				} // for
 			} // if
 		}
 
-		return recordings != null? new LinkedList<CallRecording>(recordings.values()) : null;
+		return recordings;
 	}
 	
 	/**
