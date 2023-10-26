@@ -71,6 +71,9 @@ public class ExcelWriter {
 				value = null;
 				columnName = columns[nCol];
 				switch (columnName) {
+				case CallRecording.HEADER_CONNECTION_ID:
+					value = recording.getId();
+					break;
 				case CallRecording.HEADER_PATH_NAME:
 					value = recording.getPathName();
 					break;

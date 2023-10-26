@@ -51,6 +51,7 @@ public class CallRecording implements IConfigGeneratorHeader {
 	
 	public static final String DEFAULT_AGENT_NAME = "Juan Esposito Esposito";
 
+	private String id;
 	private String pathName;
 	private String fileName;
 	/** Duration in seconds */
@@ -106,6 +107,14 @@ public class CallRecording implements IConfigGeneratorHeader {
 
 		extendedFields = new HashMap<String, String>();
 		this.userDataDelimiter = "#";
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getPathName() {
@@ -282,6 +291,10 @@ public class CallRecording implements IConfigGeneratorHeader {
 	public String[] getHeaders() {
 		List<String> header = new LinkedList<String>();
 
+		if(id != null) { 
+			header.add(HEADER_CONNECTION_ID);
+		}
+		
 		header.add(HEADER_PATH_NAME);
 		header.add(HEADER_FILE_NAME);
 		header.add(HEADER_DATE_TIME);
@@ -369,6 +382,7 @@ public class CallRecording implements IConfigGeneratorHeader {
 		// Path_Name File_Name Date_Time duration
 
 		builder.append("{\n\t")
+				.append("connection_id: ").append(id).append("\n\t")
 				.append("Path_Name: ").append(pathName).append("\n\t")
 				.append("File_Name: ").append(fileName).append("\n\t")
 				.append("Date_Time: ").append(getDateTimeAsString()).append("\n\t")
@@ -411,7 +425,5 @@ public class CallRecording implements IConfigGeneratorHeader {
 		}
 		
 		return eq;
-	}
-	
-	
+	}	
 }

@@ -9,6 +9,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -209,7 +211,7 @@ public class RingoverAPIWrapper {
 			} else {
 				endDateTmp = DateUtil.datePlusXDays(endDateTmp, 15);
 			}
-		} while (endDateTmp.before(endDateTmp));
+		} while (endDateTmp.before(endDate));
 
 		return recordings;
 	}
@@ -222,10 +224,10 @@ public class RingoverAPIWrapper {
 	 * @throws IOException
 	 */
 	private List<CallRecording> transform(TerminatedCalls calls, boolean discardCallsWithourAudio) throws IOException {
-		List<CallRecording> recordings = null;
+		Map<String, CallRecording> recordings = null;
 
 		if (calls != null) {
-			recordings = new LinkedList<CallRecording>();
+			recordings = new HashMap<String, CallRecording>();
 
 			String direction = null;
 			String recordingURL = null;
@@ -236,7 +238,7 @@ public class RingoverAPIWrapper {
 
 					// Path name should be a Universal Naming Convention (UNC) path
 					recording.setPathName(workingDirectory);
-
+					recording.setId(call.getCallId());
 					recording.setDuration(call.getTotalDuration());
 
 					//
@@ -327,19 +329,20 @@ public class RingoverAPIWrapper {
 						continue;
 					}
 
-					if(!recordings.contains(recording)) {
-						recordings.add(recording);
+					if(recordings.containsKey(recording.getId())) {
+						log.info("<-- Recording previously inserted. Skipped: " + recording.getId());						
 					}
 					else {
-						log.info("--> Recording previously inserted. Skipped. ANI: " + recording.getAni());
+						log.info("--> Recording  inserted: " + recording.getId());
+						recordings.put(recording.getId(), recording);						
 					}
 				} // for
 			} // if
 		}
 
-		return recordings;
+		return recordings != null? new LinkedList<CallRecording>(recordings.values()) : null;
 	}
-
+	
 	/**
 	 * <p>
 	 * Provides the name of the call recording file from call recording URL
