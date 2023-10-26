@@ -1,44 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="warn">
-    <Properties>
-        <Property name="basePath">.</Property>
-    </Properties>
- 
-    <Appenders>
-        <RollingFile name="fileLogger" fileName="${basePath}/Ringover2QfinitiDataImporter.log" filePattern="${basePath}/strs2js-%d{yyyy-MM-dd}.log">
-            <PatternLayout>
-                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
-            </PatternLayout>
-            <Policies>
-                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
-            </Policies>
-        </RollingFile>
- 
-        <Console name="console" target="SYSTEM_OUT">
-            <PatternLayout   pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
-        </Console>
-    </Appenders>
-    <Loggers>
-        <Logger name="com.opentext.qfiniti.importer" level="debug" additivity="true">
-            <appender-ref ref="fileLogger" level="debug" />
-        </Logger>
-        <Logger name="com.opentext.qfiniti.importer.io" level="debug" additivity="true">
-            <appender-ref ref="fileLogger" level="debug" />
-        </Logger>
-        <Logger name="com.opentext.qfiniti.importer.pojo" level="debug" additivity="true">
-            <appender-ref ref="fileLogger" level="debug" />
-        </Logger>		
-        <Logger name="com.opentext.qfiniti.importer.ringover" level="debug" additivity="true">
-            <appender-ref ref="fileLogger" level="debug" />
-        </Logger>				
-        <Logger name="com.opentext.qfiniti.importer.ringover.pojo" level="debug" additivity="true">
-            <appender-ref ref="fileLogger" level="debug" />
-        </Logger>		
-        <Logger name="com.opentext.qfiniti.importer.util" level="debug" additivity="true">
-            <appender-ref ref="fileLogger" level="debug" />
-        </Logger>			
-        <Root level="debug" additivity="false">
+<Configuration status="warn" 
+		strict="true" 
+		xmlns="http://logging.apache.org/log4j/2.0/config" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Properties>
+		<Property name="basePath">.</Property>
+	</Properties>
+	<Appenders>
+		<RollingFile name="fileLogger" fileName="${basePath}/Ringover2QfinitiDataImporter.log" filePattern="${basePath}/strs2js-%d{yyyy-MM-dd}.log">
+			<PatternLayout>
+				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+			</Policies>
+		</RollingFile>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"/>
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Logger name="com.opentext.qfiniti.importer" level="debug" additivity="true">
+			<appender-ref ref="fileLogger" level="debug"/>
+		</Logger>
+		<Logger name="com.opentext.qfiniti.importer.io" level="debug" additivity="true">
+			<appender-ref ref="fileLogger" level="debug"/>
+		</Logger>
+		<Logger name="com.opentext.qfiniti.importer.pojo" level="debug" additivity="true">
+			<appender-ref ref="fileLogger" level="debug"/>
+		</Logger>
+		<Logger name="com.opentext.qfiniti.importer.ringover" level="debug" additivity="true">
+			<appender-ref ref="fileLogger" level="debug"/>
+		</Logger>
+		<Logger name="com.opentext.qfiniti.importer.ringover.pojo" level="debug" additivity="true">
+			<appender-ref ref="fileLogger" level="debug"/>
+		</Logger>
+		<Logger name="com.opentext.qfiniti.importer.util" level="debug" additivity="true">
+			<appender-ref ref="fileLogger" level="debug"/>
+		</Logger>
+		<Root level="debug" additivity="false">
+			<!-- 
             <appender-ref ref="console" />
-        </Root>
-    </Loggers>
+            -->
+			<appender-ref ref="fileLogger"/>
+		</Root>
+	</Loggers>
 </Configuration>

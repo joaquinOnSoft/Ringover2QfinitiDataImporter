@@ -237,25 +237,18 @@ public class RingoverAPIWrapper {
 					// Path name should be a Universal Naming Convention (UNC) path
 					recording.setPathName(workingDirectory);
 
-					recordingURL = call.getRecord();
-					if (recordingURL != null) {
-						recordingFileName = getFileNameFromURL(recordingURL);
-
-						recording.setFileName(recordingFileName);
-
-						try {
-							// Download recording file (mp3) from recording URL
-							InputStream in = new URL(recordingURL).openStream();
-							Files.copy(in, Paths.get(workingDirectory, recordingFileName),
-									StandardCopyOption.REPLACE_EXISTING);
-						} catch (IOException e) {
-							log.error("Download recording file (mp3) from recording URL: " + recordingFileName);
-						}
-					}
-
 					recording.setDuration(call.getTotalDuration());
 
-					// "start_time": "2023-06-14T09:31:17.73Z"
+					//
+					// Manage call start time
+					//
+					// NOTE: Officially the date format follows this format: 
+					//    "yyyy-MM-dd'T'HH:mm:ss'.'SS'Z'"
+					// 
+					// Example: "start_time": "2023-06-14T09:31:17.73Z"
+					//
+					// But sometimes follows this other format: 
+					//    "yyyy-MM-dd'T'HH:mm:ss'Z'"
 					Date callStartTime = null;
 					String startTimeStr = call.getStartTime();
 					try {
@@ -275,8 +268,11 @@ public class RingoverAPIWrapper {
 					recording.setDateTime(DateUtil.dateToFormat(callStartTime, "dd/MM/yyyy HH:mm:ss"));
 					recording.setTeamMemberName(call.getUser().getLastname() + ", " + call.getUser().getFirstname());
 					recording.setGroupHierachy(Integer.toString(call.getUser().getTeamId()));
-					// ANIs omitted
+					// ANIs intentionally omitted
 
+					//
+					// Set call direction (INBOUND, OUTBOUND, UNKNOWN)
+					//
 					direction = call.getDirection();
 					if (direction != null) {
 						switch (direction.toLowerCase()) {
@@ -292,15 +288,51 @@ public class RingoverAPIWrapper {
 							recording.setDirection(CallRecording.DIRECTION_UNKNOWN);
 						}
 					}
+					
+					//
+					// Download call from Ringover CDN
+					//
+					recordingURL = call.getRecord();
+					if (recordingURL != null) {
+
+						log.debug("Downloading recording URL : " + recordingURL);
+
+						recordingFileName = getFileNameFromURL(recordingURL);
+						recording.setFileName(recordingFileName);					
+
+						try {
+							// Download recording file (mp3) from recording URL
+							InputStream in = new URL(recordingURL).openStream();
+							Files.copy(in, Paths.get(workingDirectory, recordingFileName),
+									StandardCopyOption.REPLACE_EXISTING);
+							
+							log.info("DOWNLOADED recording URL : " + recordingURL);
+						} catch (IOException e) {
+							log.error(">>> Unable to download recording file (mp3) from recording URL: " + recordingFileName, e);
+							// Set file name to null to force the call skipping
+							recording.setFileName(null);
+						}
+					}
+					else {
+						log.debug("Recording URL was null. ANI: " + recording.getAni() + " DNI: " + recording.getDnis());
+					}
+					
 
 					if ((recording.getFileName() == null || recording.getFileName().compareTo("") == 0)
 							&& discardCallsWithourAudio) {
-						log.debug("Skiping call without audio associated. DNIS: " + recording.getDnis() + " Date: "
-								+ recording.getDateTimeAsString());
+						log.debug("SKIPPING CALL without audio associated. URL: "
+								+ recordingURL
+								+ " DNIS: " + recording.getDnis() 
+								+ " Date: " + recording.getDateTimeAsString());
 						continue;
 					}
 
-					recordings.add(recording);
+					if(!recordings.contains(recording)) {
+						recordings.add(recording);
+					}
+					else {
+						log.info("--> Recording previously inserted. Skipped. ANI: " + recording.getAni());
+					}
 				} // for
 			} // if
 		}

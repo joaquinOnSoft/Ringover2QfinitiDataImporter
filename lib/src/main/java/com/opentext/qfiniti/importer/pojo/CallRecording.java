@@ -58,7 +58,17 @@ public class CallRecording implements IConfigGeneratorHeader {
 	private LocalDateTime dateTime;
 	private String teamMemberName;
 	private String groupHierachy;
+	/**
+	 * <strong>Automatic Number Identification (ANI)</strong> was originally developed to simplify the billing 
+	 * process for telephone operators. Rather than manually request the origin phone number 
+	 * for a telephone call, ANI transmits this information as data, simplifying the process.
+	 */
 	private String ani;
+	/**
+	 * <strong>Dialed Number Information Service (DNIS)</strong> is designed to allow the 
+	 * recipient of a telephone call the know the phone number originally 
+	 * dialed for an incoming phone call.
+	 */
 	private String dnis;
 	
 	private String userData;
@@ -372,4 +382,27 @@ public class CallRecording implements IConfigGeneratorHeader {
 
 		return builder.toString();
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		boolean eq = false;
+	
+		if(obj != null && obj instanceof CallRecording) {
+			CallRecording call = (CallRecording) obj;
+			eq = ( (pathName == null && call.getPathName() == null) || (pathName != null && pathName.compareTo(call.getPathName()) == 0) )
+					&& ( (fileName == null && call.getFileName() == null) || (fileName != null && fileName.compareTo(call.getFileName()) == 0) )
+					&& duration == call.getDuration() 
+					&& ( (dateTime == null && call.getDateTime() == null) || (dateTime != null && getDateTimeAsString().compareTo(call.getDateTimeAsString()) == 0) )
+					&& ( (teamMemberName == null && call.getTeamMemberName()== null) || (teamMemberName != null && teamMemberName.compareTo(call.getTeamMemberName()) == 0) )
+					&& ( (groupHierachy == null && call.getGroupHierachy()== null) || (groupHierachy != null && groupHierachy.compareTo(call.getGroupHierachy()) == 0) )
+					&& ( (ani == null && call.getAni() == null) || (ani != null && ani.compareTo(call.getAni()) == 0) )
+					&& ( (userData == null && call.getUserData() == null) || (userData != null && userData.compareTo(call.getUserData()) == 0) )
+					&& ( (userDataDelimiter == null && call.getUserDataDelimiter() == null) || (userDataDelimiter  != null &&  userDataDelimiter.compareTo(call.getUserDataDelimiter()) == 0) )
+					&& direction == call.getDirection() ;
+		}
+		
+		return eq;
+	}
+	
+	
 }

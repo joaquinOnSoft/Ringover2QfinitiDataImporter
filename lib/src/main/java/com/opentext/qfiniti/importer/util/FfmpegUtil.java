@@ -1,7 +1,9 @@
 package com.opentext.qfiniti.importer.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
@@ -15,15 +17,33 @@ public class FfmpegUtil {
 
 	public static int convertMp32Wav(File mp3, File wav) {
 		int exitValue = -1;
-		
+
 		// ffmpeg options_
 		//   -i url (input)  input file url
 		//   -y (global)     Overwrite output files without asking.
 		// https://ffmpeg.org/ffmpeg.html#Main-options
 		String[] cmd={getFfmpegExeName(),"-y", "-i", mp3.getAbsolutePath(), wav.getAbsolutePath()};
-		
+
 		try {
 			Process process = Runtime.getRuntime().exec(cmd);
+
+			BufferedReader stdInput = new BufferedReader(new 
+					InputStreamReader(process.getInputStream()));
+
+			BufferedReader stdError = new BufferedReader(new 
+					InputStreamReader(process.getErrorStream()));
+
+			// Read the output from the command			
+			String s = null;
+			while ((s = stdInput.readLine()) != null) {
+				log.debug(s);
+			}
+
+			// Read any errors from the attempted command
+			while ((s = stdError.readLine()) != null) {
+				log.debug(s);
+			}
+
 			exitValue = process.waitFor();			
 		} catch (IOException e) {
 			log.error("Unable to convert mp3 file " + mp3.getAbsolutePath() + " to " +wav.getAbsolutePath(), e);
@@ -33,7 +53,7 @@ public class FfmpegUtil {
 
 		return exitValue; 
 	}
-	
+
 	public static String getFfmpegExeName() {
 		// `ffmpeg` executable name can change depending on the operative system
 		String exec = "ffmpeg";
@@ -41,10 +61,10 @@ public class FfmpegUtil {
 		if (OSUtil.isWindows()) {
 			exec = "ffmpeg.exe";
 		}
-		
+
 		return exec;
 	}
-	
+
 	/**
 	 * Check existence of `ffmpeg` in the PATH.
 	 * 
@@ -62,7 +82,7 @@ public class FfmpegUtil {
 	 * @see com.opentext.qfiniti.importer.io.metadata.JaffreeMetadataExtractor#isFfmpegInPath
 	 **/
 	private static boolean isFfmpegInPath(String exec) {
-		 return java.util.stream.Stream
+		return java.util.stream.Stream
 				.of(System.getenv("PATH").split(Pattern.quote(File.pathSeparator)))
 				.map(Paths::get)
 				.anyMatch(path -> Files.exists(path.resolve(exec)));

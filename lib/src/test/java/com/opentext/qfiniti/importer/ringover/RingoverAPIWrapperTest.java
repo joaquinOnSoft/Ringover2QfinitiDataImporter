@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.File;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import com.opentext.qfiniti.importer.pojo.CallRecording;
 import com.opentext.qfiniti.importer.util.DateUtil;
+import com.opentext.qfiniti.importer.util.FileUtil;
 
 public class RingoverAPIWrapperTest {
 
@@ -43,5 +45,11 @@ public class RingoverAPIWrapperTest {
 		
 		assertNotNull(recordings);
 		assertEquals(49, recordings.size());
+		
+		//Remove mp3 files downloaded during the test
+		File[] mp3Files = FileUtil.filterFilesByExtension(".", ".mp3");
+		for(File mp3: mp3Files) {
+			FileUtil.deleteFile(mp3.getAbsolutePath());
+		}		
 	}
 }
