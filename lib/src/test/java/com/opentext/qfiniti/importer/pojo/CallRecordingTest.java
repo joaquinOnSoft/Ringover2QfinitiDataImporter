@@ -28,7 +28,8 @@ public class CallRecordingTest {
 		c3.setAni("3468111222333");
 		c3.setDnis("34670666555444");
 		c3.setDateTime(LocalDateTime.now());
-		c3.setTeamMemberName("Targaryen, Daenerys");		
+		c3.setTeamMemberName("Targaryen, Daenerys");	
+		c3.setPathName("\\\\myserver\\calls");
 	}
 	
 	@Test

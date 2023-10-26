@@ -385,20 +385,29 @@ public class CallRecording implements IConfigGeneratorHeader {
 
 	@Override
 	public boolean equals(Object obj) {
-		boolean eq = false;
-	
+		boolean eq = true;
+				
 		if(obj != null && obj instanceof CallRecording) {
 			CallRecording call = (CallRecording) obj;
-			eq = ( (pathName == null && call.getPathName() == null) || (pathName != null && pathName.compareTo(call.getPathName()) == 0) )
-					&& ( (fileName == null && call.getFileName() == null) || (fileName != null && fileName.compareTo(call.getFileName()) == 0) )
-					&& duration == call.getDuration() 
-					&& ( (dateTime == null && call.getDateTime() == null) || (dateTime != null && getDateTimeAsString().compareTo(call.getDateTimeAsString()) == 0) )
-					&& ( (teamMemberName == null && call.getTeamMemberName()== null) || (teamMemberName != null && teamMemberName.compareTo(call.getTeamMemberName()) == 0) )
-					&& ( (groupHierachy == null && call.getGroupHierachy()== null) || (groupHierachy != null && groupHierachy.compareTo(call.getGroupHierachy()) == 0) )
-					&& ( (ani == null && call.getAni() == null) || (ani != null && ani.compareTo(call.getAni()) == 0) )
-					&& ( (userData == null && call.getUserData() == null) || (userData != null && userData.compareTo(call.getUserData()) == 0) )
-					&& ( (userDataDelimiter == null && call.getUserDataDelimiter() == null) || (userDataDelimiter  != null &&  userDataDelimiter.compareTo(call.getUserDataDelimiter()) == 0) )
-					&& direction == call.getDirection() ;
+						
+			String[] valuesObj1 = {pathName, fileName, getDateTimeAsString(), 
+					teamMemberName, groupHierachy, ani, 
+					dnis, userData, userDataDelimiter};
+			String[] valuesObj2 = {call.getPathName(), call.getFileName(), call.getDateTimeAsString(),
+					call.getTeamMemberName(), call.getGroupHierachy(), call.getAni(),
+					call.getDnis(), call.getUserData(), call.getUserDataDelimiter()};
+			
+			int size = valuesObj1.length;
+			for(int i=0; i< size; i++) {
+				eq  = eq &&
+						( (valuesObj1[i] == null && valuesObj2[i] == null) 
+								|| ( (valuesObj1[i] != null && valuesObj2[i] != null) && (valuesObj1[i].compareTo(valuesObj2[i]) == 0) ) );
+			}
+			
+			eq = eq && duration == call.getDuration() && direction == call.getDirection() ;
+		}
+		else {
+			eq = false;
 		}
 		
 		return eq;
