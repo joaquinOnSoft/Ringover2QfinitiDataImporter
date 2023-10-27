@@ -112,3 +112,4 @@ apiKey=RINGOVER_API_KEY
 
  - Released on October 27th 2023. 
  - Added new parameter **--remove**
+ - SLF4J warning removed.
