@@ -176,7 +176,10 @@ public class Ringover2QfinitiDataImporterLauncher {
 				removeMp3 = true;
 			}				
 			
-			log.debug("Downloading call recordings...");
+			//
+			// The magic happens here
+			//
+			System.out.println("Downloading call recordings...");
 			
 			RingoverAPIWrapper api = new RingoverAPIWrapper(uncPath);
 			List<CallRecording> recordings = api.getAllCalls(from, to, cType, discardCallsWithourAudio);
@@ -208,8 +211,8 @@ public class Ringover2QfinitiDataImporterLauncher {
 	}
 
 	private static List<CallRecording> convertMp32WavFiles(List<CallRecording> recordings) {
-		log.debug("Initializing MP3 to WAV conversion...");
-		System.out.println("Initializing MP3 to WAV conversion...");
+		log.debug("MP3 to WAV conversion...");
+		System.out.println("MP3 to WAV conversion...");
 		
 		Mp32WavConverter converter = new Mp32WavConverter();
 		recordings = converter.convert(recordings);

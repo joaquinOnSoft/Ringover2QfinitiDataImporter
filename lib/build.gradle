@@ -82,19 +82,10 @@ dependencies {
 	// Implementation for Apache Log4J, a highly configurable logging tool that focuses on performance and low garbage generation. It has a plugin architecture that makes it extensible and supports asynchronous logging based on LMAX Disruptor.	
 	// https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
 	implementation 'org.apache.logging.log4j:log4j-core:2.21.0'
-	// The Apache Log4j SLF4J 2.0 API binding to Log4j 2 Core
 	// https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j2-impl
-	// testImplementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.21.0'
+	implementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.21.1'
 
 
-	// API for SLF4J (The Simple Logging Facade for Java) which serves as a simple facade or 
-	// abstraction for various logging frameworks, allowing the end user to plug in the desired 
-	// logging framework at deployment time.
-	// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
-	implementation 'org.slf4j:slf4j-api:2.0.9'	
-	// Binding/provider for SLF4J, which outputs all events to System.err. Only messages of level INFO and higher are printed.	
-	// https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
-	testImplementation 'org.slf4j:slf4j-simple:2.0.9'
 	
 	
     // Module "junit-jupiter" of JUnit 5.    
