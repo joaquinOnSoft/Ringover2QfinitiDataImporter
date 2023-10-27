@@ -100,3 +100,9 @@ apiKey=RINGOVER_API_KEY
 
  - Released on October 25th, 2023
  - Added new parameter **--wav**
+ 
+### 23.11.01 change log
+
+ - Version 23.11.01. 
+ - Released on October 27th 2023. 
+ - Manage recording URL that fails with a 404 error.
