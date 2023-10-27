@@ -15,32 +15,60 @@ import org.apache.logging.log4j.Logger;
 public class FfmpegUtil {
 	private static final Logger log = LogManager.getLogger(FfmpegUtil.class);
 
+	/**
+	 * NOTE: mp3 files recorded by Ringover have these characteristics:
+	 * 
+	 * 	Stream #0:0: Audio: mp3, 16000 Hz, stereo, fltp, 64 kb/s
+	 * 
+	 * @param mp3
+	 * @param wav
+	 * @return
+	 */
 	public static int convertMp32Wav(File mp3, File wav) {
 		int exitValue = -1;
 
-		// ffmpeg options_
+		// usage: ffmpeg [options] [[infile options] -i infile]... {[outfile options] outfile}...
+		
+		//   -y (global)     Overwrite output files without asking.		
 		//   -i url (input)  input file url
-		//   -y (global)     Overwrite output files without asking.
+		//   -ac channels        set number of audio channels
+		//   -acodec codec       force audio codec ('copy' to copy stream)
+		//   -ar rate            set audio sampling rate (in Hz)
+		
 		// https://ffmpeg.org/ffmpeg.html#Main-options
-		String[] cmd={getFfmpegExeName(),"-y", "-i", mp3.getAbsolutePath(), wav.getAbsolutePath()};
+		//
+		// SEE: 
+		// https://gist.github.com/vunb/7349145
+		String[] cmd={getFfmpegExeName(),
+				"-y", 
+				"-i", 						
+				mp3.getAbsolutePath(),
+				"-acodec",
+				"pcm_s16le",
+				"-ac",
+				"2",
+				"-ar",
+				"16000",
+				wav.getAbsolutePath()};
 
 		try {
 			Process process = Runtime.getRuntime().exec(cmd);
 
+			BufferedReader stdError = new BufferedReader(new 
+					InputStreamReader(process.getErrorStream()));		
+			
 			BufferedReader stdInput = new BufferedReader(new 
 					InputStreamReader(process.getInputStream()));
 
-			BufferedReader stdError = new BufferedReader(new 
-					InputStreamReader(process.getErrorStream()));
-
-			// Read the output from the command			
-			String s = null;
-			while ((s = stdInput.readLine()) != null) {
-				log.debug(s);
-			}
-
 			// Read any errors from the attempted command
+			String s = null;
 			while ((s = stdError.readLine()) != null) {
+				log.info(s);
+			}
+			
+			// Read the output from the command			
+			
+			while ((s = stdInput.readLine()) != null) {
 				log.debug(s);
 			}
 

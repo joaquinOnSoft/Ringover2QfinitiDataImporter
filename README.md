@@ -15,7 +15,7 @@ Command line tool to download calls from `Ringover` and generate an Excel file t
 To run this command line tool you just need to execute runable jar, i.e.
 
 ```script
-java -jar Ringover2QfinitiDataImporter-23.11.01.jar -from 20230601 -to 20230621 -c ANSWERED
+java -jar Ringover2QfinitiDataImporter-23.11.02.jar -from 20230601 -to 20230621 -c ANSWERED
 ```
 
 ### Valid arguments
@@ -33,6 +33,8 @@ These are the valid arguments admitted by this tool:
  - **-u,--unc <arg>**        (MADATORY) Universal Naming Convention (UNC) path to store the call recording files, i.e. *\\SERVER\recordings*
  - **-d, --discard**         (OPTIONAL) Discard calls without audio file associated (false by default)
  - **-w, --wav**              (OPTIONAL) Apply .mp3 to .wav conversion (using ffmpeg). 
+ - **-r, --remove**           (OPTIONAL) Remove .mp3 files once the download is completed and the Excel file has been generated. (Recommended when --wav argument is used) 
+
  
 > **NOTE** 'ffmpeg' must be included in the *PATH* when using --wav argument.
 > The conversion from .mp3 to .wav will increase the time needed to complete the process.
@@ -103,6 +105,10 @@ apiKey=RINGOVER_API_KEY
  
 ### 23.11.01 change log
 
- - Version 23.11.01. 
  - Released on October 27th 2023. 
  - Manage recording URL that fails with a 404 error.
+ 
+### 23.11.02 change log
+
+ - Released on October 27th 2023. 
+ - Added new parameter **--remove**

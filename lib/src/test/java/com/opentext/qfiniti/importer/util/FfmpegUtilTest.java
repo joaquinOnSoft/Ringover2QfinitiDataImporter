@@ -15,8 +15,9 @@ public class FfmpegUtilTest {
 		File wav = new File(mp3.getParentFile().getAbsolutePath().concat(File.separator).concat("Free_Test_Data_100KB_MP3.wav"));
 
 		int exitValue = FfmpegUtil.convertMp32Wav(mp3, wav);
-		assertEquals(0, exitValue);
 		assertTrue(wav.exists());
+		assertEquals(0, exitValue);
+
 		
 		wav.delete();
 	}

@@ -38,11 +38,11 @@
 		<Logger name="com.opentext.qfiniti.importer.util" level="debug" additivity="true">
 			<appender-ref ref="fileLogger" level="debug"/>
 		</Logger>
-		<Root level="debug" additivity="false">
-			<!--			 
+		<Root level="debug" additivity="false">			 
+            <!--
             <appender-ref ref="console" />
-            -->
-			<appender-ref ref="fileLogger"/>			
+			-->	
+			<appender-ref ref="fileLogger"/>				
 		</Root>
 	</Loggers>
 </Configuration>
