@@ -15,7 +15,7 @@ Command line tool to download calls from `Ringover` and generate an Excel file t
 To run this command line tool you just need to execute runable jar, i.e.
 
 ```script
-java -jar Ringover2QfinitiDataImporter-23.11.02.jar -from 20230601 -to 20230621 -c ANSWERED
+java -jar Ringover2QfinitiDataImporter-23.11.03.jar -from 20230601 -to 20230621 -c ANSWERED
 ```
 
 ### Valid arguments
@@ -108,7 +108,7 @@ apiKey=RINGOVER_API_KEY
  - Released on October 27th 2023. 
  - Manage recording URL that fails with a 404 error.
  
-### 23.11.02 change log
+### 23.11.03 change log
 
  - Released on October 27th 2023. 
  - Added new parameter **--remove**

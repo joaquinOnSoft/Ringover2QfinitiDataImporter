@@ -2,6 +2,7 @@ package com.opentext.qfiniti.importer.ringover;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -80,6 +81,60 @@ public class Ringover2QfinitiDataImporterLauncher {
 	private static final Logger log = LogManager.getLogger(Ringover2QfinitiDataImporterLauncher.class);
 
 	public static void main(String[] args) {
+		Options options = createOptions();			
+			
+		CommandLineParser parser = new DefaultParser();
+		HelpFormatter formatter = new HelpFormatter();
+		CommandLine cmd = null;
+
+		try {
+			cmd = parser.parse(options, args);
+
+			RingoverImporterOptions params = manageOptions(cmd);
+			
+			//
+			// The magic happens here
+			//
+			System.out.println("Downloading call recordings...");
+			
+			RingoverAPIWrapper api = new RingoverAPIWrapper(params.getUncPath());
+			List<CallRecording> recordings = api.getAllCalls(params.getFrom(), 
+					params.getTo(), params.getCallType(), params.isDiscardCallsWithourAudio());
+
+			if (recordings == null || recordings.size() == 0) {
+				System.out.println("No call recordings were found in the given period!");
+			} else {
+				System.out.println("Call recordings found: " + recordings.size());
+
+				if(params.isWavConversion() == true) {
+					System.out.println("MP3 to WAV conversion...");
+					recordings = convertMp32WavFiles(recordings);
+				}
+				
+				System.out.println("Generating Excel...");								
+				generateExcelFile(recordings, params.getOutputFileName());
+				
+				if(params.isRemoveMp3() == true) {
+					System.out.println("Deleting MP3 files...");					
+					removeMp3Files(params.getUncPath());
+				}
+				
+				System.out.println("That's all folks!!!");				
+			}
+		} catch (org.apache.commons.cli.ParseException | java.text.ParseException 
+				| IllegalArgumentException | IOException | InvalidFormatException e) {
+			formatter.printHelp(
+					"java -jar Ringover2QfinitiDataImporter-23.11.03.jar --discard --wave --remove --from 20230601 --to 20230621 -c ANSWERED", options);
+
+			exitInError(e.getMessage());
+		}
+	}
+
+	/**
+	 * Create command line options
+	 * @return command line options
+	 */
+	private static Options createOptions() {
 		Options options = new Options();
 
 		Option fromOption = new Option(SHORT_OPT_FROM, LONG_OPT_FROM, true, "From date. Format: yyyymmdd. Default value: yesterday");
@@ -110,109 +165,64 @@ public class Ringover2QfinitiDataImporterLauncher {
 		options.addOption(wavConversionOption);			
 
 		Option removeMp3Option = new Option(SHORT_OPT_REMOVE_MP3, LONG_OPT_REMOVE_MP3, false, "Remove .mp3 files once the download is completed and the Excel file has been generated. (Recommended when --wav argument is used)");
-		options.addOption(removeMp3Option);			
-			
+		options.addOption(removeMp3Option);
 		
-		CommandLineParser parser = new DefaultParser();
-		HelpFormatter formatter = new HelpFormatter();
-		CommandLine cmd = null;
-
-		try {
-			cmd = parser.parse(options, args);
-
-			boolean removeMp3 = false;
-			boolean wavConversion = false;
-			boolean discardCallsWithourAudio = false;
-			Date to = Calendar.getInstance().getTime();
-			Date from = DateUtil.datePlusXDays(to, -1);
-			CallType cType = CallType.ANSWERED;
-			String outputFileName = "calls-" 
-					+ DateUtil.dateToFormat(Calendar.getInstance().getTime(), "yyyyMMdd")
-					+ ".xls";
-			String uncPath = null;
-
-			if (cmd.hasOption(LONG_OPT_FROM) || cmd.hasOption(SHORT_OPT_FROM)) {
-				String fromStr = cmd.getOptionValue(LONG_OPT_FROM);
-				if (fromStr != null) {
-					from = DateUtil.strToDate(fromStr, "yyyyMMdd");
-				}
+		return options;
+	}
+	
+	private static RingoverImporterOptions manageOptions(CommandLine cmd) throws ParseException {
+		RingoverImporterOptions opts =  new RingoverImporterOptions();
+		
+		if (cmd.hasOption(LONG_OPT_FROM) || cmd.hasOption(SHORT_OPT_FROM)) {
+			String fromStr = cmd.getOptionValue(LONG_OPT_FROM);
+			if (fromStr != null) {
+				opts.setFrom( DateUtil.strToDate(fromStr, "yyyyMMdd") );
 			}
-
-			if (cmd.hasOption(LONG_OPT_TO) || cmd.hasOption(SHORT_OPT_TO)) {
-				String toStr = cmd.getOptionValue(LONG_OPT_TO);
-				if (toStr != null) {
-					to = DateUtil.strToDate(toStr, "yyyyMMdd");
-				}
-			}
-
-			if (cmd.hasOption(LONG_OPT_CALL_TYPE) || cmd.hasOption(SHORT_OPT_CALL_TYPE)) {
-				String callTypeStr = cmd.getOptionValue(LONG_OPT_CALL_TYPE);
-				if (callTypeStr != null) {
-					cType = CallType.valueOf(callTypeStr);
-				}
-			}
-
-			if (cmd.hasOption(LONG_OPT_OUTPUT) || cmd.hasOption(SHORT_OPT_OUTPUT)) {
-				outputFileName = cmd.getOptionValue(LONG_OPT_OUTPUT);
-			}
-
-			if (cmd.hasOption(LONG_OPT_UNC) || cmd.hasOption(SHORT_OPT_UNC)) {
-				uncPath = cmd.getOptionValue(LONG_OPT_UNC);
-			}			
-			
-			if (cmd.hasOption(LONG_OPT_DISCARD) || cmd.hasOption(SHORT_OPT_DISCARD)) {
-				discardCallsWithourAudio = true;
-			}			
-
-			if (cmd.hasOption(LONG_OPT_WAV_CONVERSION) || cmd.hasOption(SHORT_OPT_WAV_CONVERSION)) {
-				wavConversion = true;
-				
-				if(!FfmpegUtil.isFfmpegInPath()) {
-					exitInError(" 'ffmpeg' NOT found in PATH.\n It's mandatory when using --wav argument.\n Update your PATH and try again.\n");
-				}
-			}				
-			
-			if (cmd.hasOption(LONG_OPT_REMOVE_MP3) || cmd.hasOption(SHORT_OPT_REMOVE_MP3)) {
-				removeMp3 = true;
-			}				
-			
-			//
-			// The magic happens here
-			//
-			System.out.println("Downloading call recordings...");
-			
-			RingoverAPIWrapper api = new RingoverAPIWrapper(uncPath);
-			List<CallRecording> recordings = api.getAllCalls(from, to, cType, discardCallsWithourAudio);
-
-			if (recordings == null || recordings.size() == 0) {
-				System.out.println("No call recordings were found in the given period!");
-			} else {
-				System.out.println("Call recordings found: " + recordings.size());
-
-				if(wavConversion == true) {
-					recordings = convertMp32WavFiles(recordings);
-				}
-				
-				generateExcelFile(recordings, outputFileName);
-				
-				if(removeMp3 == true) {
-					removeMp3Files(uncPath);
-				}
-				
-				System.out.println("That's all folks!!!");				
-			}
-		} catch (org.apache.commons.cli.ParseException | java.text.ParseException | IllegalArgumentException
-				| IOException | InvalidFormatException e) {
-			formatter.printHelp(
-					"java -jar Ringover2QfinitiDataImporter-23.10.jar -from 20230601 -to 20230621 -c ANSWERED", options);
-
-			exitInError(e.getMessage());
 		}
+
+		if (cmd.hasOption(LONG_OPT_TO) || cmd.hasOption(SHORT_OPT_TO)) {
+			String toStr = cmd.getOptionValue(LONG_OPT_TO);
+			if (toStr != null) {
+				opts.setTo( DateUtil.strToDate(toStr, "yyyyMMdd") );
+			}
+		}
+
+		if (cmd.hasOption(LONG_OPT_CALL_TYPE) || cmd.hasOption(SHORT_OPT_CALL_TYPE)) {
+			String callTypeStr = cmd.getOptionValue(LONG_OPT_CALL_TYPE);
+			if (callTypeStr != null) {
+				opts.setCallType( CallType.valueOf(callTypeStr) );
+			}
+		}
+
+		if (cmd.hasOption(LONG_OPT_OUTPUT) || cmd.hasOption(SHORT_OPT_OUTPUT)) {
+			opts.setOutputFileName( cmd.getOptionValue(LONG_OPT_OUTPUT) );
+		}
+
+		if (cmd.hasOption(LONG_OPT_UNC) || cmd.hasOption(SHORT_OPT_UNC)) {
+			opts.setUncPath(  cmd.getOptionValue(LONG_OPT_UNC) );
+		}			
+		
+		if (cmd.hasOption(LONG_OPT_DISCARD) || cmd.hasOption(SHORT_OPT_DISCARD)) {
+			opts.setDiscardCallsWithourAudio(true);
+		}			
+
+		if (cmd.hasOption(LONG_OPT_WAV_CONVERSION) || cmd.hasOption(SHORT_OPT_WAV_CONVERSION)) {
+			opts.setWavConversion(true);
+			
+			if(!FfmpegUtil.isFfmpegInPath()) {
+				exitInError(" 'ffmpeg' NOT found in PATH.\n It's mandatory when using --wav argument.\n Update your PATH and try again.\n");
+			}
+		}				
+		
+		if (cmd.hasOption(LONG_OPT_REMOVE_MP3) || cmd.hasOption(SHORT_OPT_REMOVE_MP3)) {
+			opts.setRemoveMp3(true);
+		}		
+		
+		return opts;
 	}
 
 	private static List<CallRecording> convertMp32WavFiles(List<CallRecording> recordings) {
 		log.debug("MP3 to WAV conversion...");
-		System.out.println("MP3 to WAV conversion...");
 		
 		Mp32WavConverter converter = new Mp32WavConverter();
 		recordings = converter.convert(recordings);
@@ -221,7 +231,7 @@ public class Ringover2QfinitiDataImporterLauncher {
 	
 	private static void generateExcelFile(List<CallRecording> recordings, String outputFileName)
 			throws IOException, InvalidFormatException {
-		System.out.println("Generating Excel...");				
+
 		CallRecording recording = recordings.get(0);
 
 		ExcelWriter writer = new ExcelWriter();
@@ -229,9 +239,6 @@ public class Ringover2QfinitiDataImporterLauncher {
 	}
 	
 	private static void removeMp3Files(String uncPath) {
-		System.out.println("Deleting MP3 files...");
-
-		
 		File[] mp3Files = FileUtil.filterFilesByExtension(uncPath, MP3_EXTENSION);
 		
 		for(File mp3: mp3Files) {
