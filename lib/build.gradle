@@ -11,7 +11,7 @@ plugins {
     id 'java-library'
 }
 
-version = '23.11.02' 
+version = '23.11.03' 
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
