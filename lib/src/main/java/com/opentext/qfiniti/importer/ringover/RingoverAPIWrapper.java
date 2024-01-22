@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -83,12 +85,10 @@ public class RingoverAPIWrapper {
 	 * are optional. For a more refined search, please refer to the POST method.
 	 * </p>
 	 * 
-	 * @param startDate                Used to create a time cursor. Must be used
+	 * @param startDate                Used to create a time cursor (start date included). Must be used
 	 *                                 with `endDate`
-	 * @param endDate                  Used to create a time cursor. Must be used
-	 *                                 with `startDate` and the difference between
-	 *                                 the `startDate` and the `endDate` must not
-	 *                                 exceed 15 days.
+	 * @param endDate                  Used to create a time cursor (end date included). Must be used
+	 *                                 with `startDate`
 	 * @param limitCount               Restrict the number of returned rows (Max.
 	 *                                 1000)
 	 * @param callType                 Used to filter certain types of call.
@@ -129,6 +129,9 @@ public class RingoverAPIWrapper {
 				throw new IllegalArgumentException(
 						"End date (" + endDate + ") must be posterior to Start date (" + startDate + ")");
 			}
+			
+			//"End date" must be included in the results
+			endDate = DateUtil.datePlusXDays(endDate, 1);
 
 			startDateTmp = startDate;
 			startDatePlus15Days = DateUtil.datePlusXDays(startDate, 15);
@@ -161,7 +164,7 @@ public class RingoverAPIWrapper {
 
 				log.info("Retrieved # calls: " + calls.getCallListCount());
 
-				if (calls != null && calls.getTotalCallCount() > 0) {
+				if (calls != null && calls.getCallListCount() > 0) {
 					List<CallRecording> recordingsTmp = transform(calls, discardCallsWithourAudio);
 
 					if (recordingsTmp != null && recordingsTmp.size() > 0) {
@@ -212,13 +215,20 @@ public class RingoverAPIWrapper {
 				}
 			} while (numCallsRetrieved < totalCallCount);
 
+			lastIdReturned = null;
+			
 			startDateTmp = endDateTmp;
 			if (DateUtil.datePlusXDays(startDateTmp, 15).after(endDate)) {
 				endDateTmp = endDate;
 			} else {
 				endDateTmp = DateUtil.datePlusXDays(endDateTmp, 15);
 			}
-		} while (endDateTmp.before(endDate));
+			
+			if(startDateTmp.equals(endDateTmp)) {
+				//Force exit loop
+				endDate = DateUtil.datePlusXDays(endDate, -15);
+			}
+		} while (endDateTmp.before(endDate) || endDateTmp.equals(endDate));
 
 		return recordings;
 	}
@@ -341,6 +351,10 @@ public class RingoverAPIWrapper {
 			} // if
 		}
 
+		if(recordings != null)
+			Collections.sort(recordings, new CallRecordingComparatorByDate());
+
+		
 		return recordings;
 	}
 	
@@ -367,5 +381,12 @@ public class RingoverAPIWrapper {
 		}
 
 		return fileName;
+	}
+	
+	
+	class CallRecordingComparatorByDate implements Comparator<CallRecording>{
+		public int compare(CallRecording obj1, CallRecording obj2){
+			return obj1.getDateTime().compareTo(obj2.getDateTime());
+		 }
 	}
 }
