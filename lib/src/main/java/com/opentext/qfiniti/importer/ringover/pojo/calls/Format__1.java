@@ -23,10 +23,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "rfc3966",
     "is_short_code"
 })
-public class Format {
+public class Format__1 {
 
     @JsonProperty("raw")
-    private Integer raw;
+    private Long raw;
     @JsonProperty("country_code")
     private String countryCode;
     @JsonProperty("country")
@@ -49,12 +49,12 @@ public class Format {
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
     @JsonProperty("raw")
-    public Integer getRaw() {
+    public Long getRaw() {
         return raw;
     }
 
     @JsonProperty("raw")
-    public void setRaw(Integer raw) {
+    public void setRaw(Long raw) {
         this.raw = raw;
     }
 

@@ -16,18 +16,19 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "contact_id",
     "is_shared",
     "im_owner",
+    "firstname",
+    "lastname",
+    "concat_name",
+    "company",
+    "color",
+    "initial",
+    "profile_picture",
     "social_service",
     "social_service_id",
     "social_profile_url",
     "social_data",
-    "firstname",
-    "lastname",
-    "company",
-    "concat_name",
-    "color",
-    "initial",
-    "profile_picture",
     "creation_date",
+    "emails",
     "numbers"
 })
 public class Contact {
@@ -38,6 +39,20 @@ public class Contact {
     private Boolean isShared;
     @JsonProperty("im_owner")
     private String imOwner;
+    @JsonProperty("firstname")
+    private String firstname;
+    @JsonProperty("lastname")
+    private String lastname;
+    @JsonProperty("concat_name")
+    private String concatName;
+    @JsonProperty("company")
+    private String company;
+    @JsonProperty("color")
+    private String color;
+    @JsonProperty("initial")
+    private String initial;
+    @JsonProperty("profile_picture")
+    private Object profilePicture;
     @JsonProperty("social_service")
     private Object socialService;
     @JsonProperty("social_service_id")
@@ -46,24 +61,12 @@ public class Contact {
     private Object socialProfileUrl;
     @JsonProperty("social_data")
     private Object socialData;
-    @JsonProperty("firstname")
-    private String firstname;
-    @JsonProperty("lastname")
-    private String lastname;
-    @JsonProperty("company")
-    private String company;
-    @JsonProperty("concat_name")
-    private String concatName;
-    @JsonProperty("color")
-    private String color;
-    @JsonProperty("initial")
-    private String initial;
-    @JsonProperty("profile_picture")
-    private Object profilePicture;
     @JsonProperty("creation_date")
     private String creationDate;
+    @JsonProperty("emails")
+    private List<Email> emails;
     @JsonProperty("numbers")
-    private List<Long> numbers;
+    private List<Number__1> numbers;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
@@ -95,6 +98,76 @@ public class Contact {
     @JsonProperty("im_owner")
     public void setImOwner(String imOwner) {
         this.imOwner = imOwner;
+    }
+
+    @JsonProperty("firstname")
+    public String getFirstname() {
+        return firstname;
+    }
+
+    @JsonProperty("firstname")
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    @JsonProperty("lastname")
+    public String getLastname() {
+        return lastname;
+    }
+
+    @JsonProperty("lastname")
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    @JsonProperty("concat_name")
+    public String getConcatName() {
+        return concatName;
+    }
+
+    @JsonProperty("concat_name")
+    public void setConcatName(String concatName) {
+        this.concatName = concatName;
+    }
+
+    @JsonProperty("company")
+    public String getCompany() {
+        return company;
+    }
+
+    @JsonProperty("company")
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    @JsonProperty("color")
+    public String getColor() {
+        return color;
+    }
+
+    @JsonProperty("color")
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    @JsonProperty("initial")
+    public String getInitial() {
+        return initial;
+    }
+
+    @JsonProperty("initial")
+    public void setInitial(String initial) {
+        this.initial = initial;
+    }
+
+    @JsonProperty("profile_picture")
+    public Object getProfilePicture() {
+        return profilePicture;
+    }
+
+    @JsonProperty("profile_picture")
+    public void setProfilePicture(Object profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     @JsonProperty("social_service")
@@ -137,76 +210,6 @@ public class Contact {
         this.socialData = socialData;
     }
 
-    @JsonProperty("firstname")
-    public String getFirstname() {
-        return firstname;
-    }
-
-    @JsonProperty("firstname")
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    @JsonProperty("lastname")
-    public String getLastname() {
-        return lastname;
-    }
-
-    @JsonProperty("lastname")
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    @JsonProperty("company")
-    public String getCompany() {
-        return company;
-    }
-
-    @JsonProperty("company")
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
-    @JsonProperty("concat_name")
-    public String getConcatName() {
-        return concatName;
-    }
-
-    @JsonProperty("concat_name")
-    public void setConcatName(String concatName) {
-        this.concatName = concatName;
-    }
-
-    @JsonProperty("color")
-    public String getColor() {
-        return color;
-    }
-
-    @JsonProperty("color")
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    @JsonProperty("initial")
-    public String getInitial() {
-        return initial;
-    }
-
-    @JsonProperty("initial")
-    public void setInitial(String initial) {
-        this.initial = initial;
-    }
-
-    @JsonProperty("profile_picture")
-    public Object getProfilePicture() {
-        return profilePicture;
-    }
-
-    @JsonProperty("profile_picture")
-    public void setProfilePicture(Object profilePicture) {
-        this.profilePicture = profilePicture;
-    }
-
     @JsonProperty("creation_date")
     public String getCreationDate() {
         return creationDate;
@@ -217,13 +220,23 @@ public class Contact {
         this.creationDate = creationDate;
     }
 
+    @JsonProperty("emails")
+    public List<Email> getEmails() {
+        return emails;
+    }
+
+    @JsonProperty("emails")
+    public void setEmails(List<Email> emails) {
+        this.emails = emails;
+    }
+
     @JsonProperty("numbers")
-    public List<Long> getNumbers() {
+    public List<Number__1> getNumbers() {
         return numbers;
     }
 
     @JsonProperty("numbers")
-    public void setNumbers(List<Long> numbers) {
+    public void setNumbers(List<Number__1> numbers) {
         this.numbers = numbers;
     }
 
@@ -235,86 +248,6 @@ public class Contact {
     @JsonAnySetter
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(Contact.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
-        sb.append("contactId");
-        sb.append('=');
-        sb.append(((this.contactId == null)?"<null>":this.contactId));
-        sb.append(',');
-        sb.append("isShared");
-        sb.append('=');
-        sb.append(((this.isShared == null)?"<null>":this.isShared));
-        sb.append(',');
-        sb.append("imOwner");
-        sb.append('=');
-        sb.append(((this.imOwner == null)?"<null>":this.imOwner));
-        sb.append(',');
-        sb.append("socialService");
-        sb.append('=');
-        sb.append(((this.socialService == null)?"<null>":this.socialService));
-        sb.append(',');
-        sb.append("socialServiceId");
-        sb.append('=');
-        sb.append(((this.socialServiceId == null)?"<null>":this.socialServiceId));
-        sb.append(',');
-        sb.append("socialProfileUrl");
-        sb.append('=');
-        sb.append(((this.socialProfileUrl == null)?"<null>":this.socialProfileUrl));
-        sb.append(',');
-        sb.append("socialData");
-        sb.append('=');
-        sb.append(((this.socialData == null)?"<null>":this.socialData));
-        sb.append(',');
-        sb.append("firstname");
-        sb.append('=');
-        sb.append(((this.firstname == null)?"<null>":this.firstname));
-        sb.append(',');
-        sb.append("lastname");
-        sb.append('=');
-        sb.append(((this.lastname == null)?"<null>":this.lastname));
-        sb.append(',');
-        sb.append("company");
-        sb.append('=');
-        sb.append(((this.company == null)?"<null>":this.company));
-        sb.append(',');
-        sb.append("concatName");
-        sb.append('=');
-        sb.append(((this.concatName == null)?"<null>":this.concatName));
-        sb.append(',');
-        sb.append("color");
-        sb.append('=');
-        sb.append(((this.color == null)?"<null>":this.color));
-        sb.append(',');
-        sb.append("initial");
-        sb.append('=');
-        sb.append(((this.initial == null)?"<null>":this.initial));
-        sb.append(',');
-        sb.append("profilePicture");
-        sb.append('=');
-        sb.append(((this.profilePicture == null)?"<null>":this.profilePicture));
-        sb.append(',');
-        sb.append("creationDate");
-        sb.append('=');
-        sb.append(((this.creationDate == null)?"<null>":this.creationDate));
-        sb.append(',');
-        sb.append("numbers");
-        sb.append('=');
-        sb.append(((this.numbers == null)?"<null>":this.numbers));
-        sb.append(',');
-        sb.append("additionalProperties");
-        sb.append('=');
-        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
-        sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
-        } else {
-            sb.append(']');
-        }
-        return sb.toString();
     }
 
 }

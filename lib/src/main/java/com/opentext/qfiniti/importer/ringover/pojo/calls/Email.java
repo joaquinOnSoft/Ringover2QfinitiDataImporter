@@ -12,49 +12,36 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "ivr_id",
-    "name",
-    "color"
+    "email",
+    "type"
 })
-public class Ivr {
+public class Email {
 
-    @JsonProperty("ivr_id")
-    private Integer ivrId;
-    @JsonProperty("name")
-    private String name;
-    @JsonProperty("color")
-    private String color;
+    @JsonProperty("email")
+    private String email;
+    @JsonProperty("type")
+    private String type;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
-    @JsonProperty("ivr_id")
-    public Integer getIvrId() {
-        return ivrId;
+    @JsonProperty("email")
+    public String getEmail() {
+        return email;
     }
 
-    @JsonProperty("ivr_id")
-    public void setIvrId(Integer ivrId) {
-        this.ivrId = ivrId;
+    @JsonProperty("email")
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    @JsonProperty("name")
-    public String getName() {
-        return name;
+    @JsonProperty("type")
+    public String getType() {
+        return type;
     }
 
-    @JsonProperty("name")
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @JsonProperty("color")
-    public String getColor() {
-        return color;
-    }
-
-    @JsonProperty("color")
-    public void setColor(String color) {
-        this.color = color;
+    @JsonProperty("type")
+    public void setType(String type) {
+        this.type = type;
     }
 
     @JsonAnyGetter

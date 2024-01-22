@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "end_time",
     "incall_duration",
     "total_duration",
+    "contact_number",
     "from_number",
     "to_number",
     "note",
@@ -33,14 +34,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "record",
     "fax",
     "user",
-    "contact",
     "conference",
     "ivr",
+    "contact",
     "amd",
     "is_archived",
-    "scenario_name"
+    "scenario_name",
+    "scenario_id"
 })
-
 public class Call {
 
     @JsonProperty("cdr_id")
@@ -65,6 +66,8 @@ public class Call {
     private Integer incallDuration;
     @JsonProperty("total_duration")
     private Integer totalDuration;
+    @JsonProperty("contact_number")
+    private String contactNumber;
     @JsonProperty("from_number")
     private String fromNumber;
     @JsonProperty("to_number")
@@ -83,18 +86,20 @@ public class Call {
     private String fax;
     @JsonProperty("user")
     private User user;
-    @JsonProperty("contact")
-    private Contact contact;
     @JsonProperty("conference")
     private Conference conference;
     @JsonProperty("ivr")
     private Ivr ivr;
+    @JsonProperty("contact")
+    private Contact contact;
     @JsonProperty("amd")
     private Boolean amd;
     @JsonProperty("is_archived")
     private Boolean isArchived;
     @JsonProperty("scenario_name")
     private String scenarioName;
+    @JsonProperty("scenario_id")
+    private String scenarioId;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
@@ -208,6 +213,16 @@ public class Call {
         this.totalDuration = totalDuration;
     }
 
+    @JsonProperty("contact_number")
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    @JsonProperty("contact_number")
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
     @JsonProperty("from_number")
     public String getFromNumber() {
         return fromNumber;
@@ -298,16 +313,6 @@ public class Call {
         this.user = user;
     }
 
-    @JsonProperty("contact")
-    public Contact getContact() {
-        return contact;
-    }
-
-    @JsonProperty("contact")
-    public void setContact(Contact contact) {
-        this.contact = contact;
-    }
-
     @JsonProperty("conference")
     public Conference getConference() {
         return conference;
@@ -326,6 +331,16 @@ public class Call {
     @JsonProperty("ivr")
     public void setIvr(Ivr ivr) {
         this.ivr = ivr;
+    }
+
+    @JsonProperty("contact")
+    public Contact getContact() {
+        return contact;
+    }
+
+    @JsonProperty("contact")
+    public void setContact(Contact contact) {
+        this.contact = contact;
     }
 
     @JsonProperty("amd")
@@ -358,6 +373,16 @@ public class Call {
         this.scenarioName = scenarioName;
     }
 
+    @JsonProperty("scenario_id")
+    public String getScenarioId() {
+        return scenarioId;
+    }
+
+    @JsonProperty("scenario_id")
+    public void setScenarioId(String scenarioId) {
+        this.scenarioId = scenarioId;
+    }
+
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -366,126 +391,6 @@ public class Call {
     @JsonAnySetter
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(Call.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
-        sb.append("cdrId");
-        sb.append('=');
-        sb.append(((this.cdrId == null)?"<null>":this.cdrId));
-        sb.append(',');
-        sb.append("callId");
-        sb.append('=');
-        sb.append(((this.callId == null)?"<null>":this.callId));
-        sb.append(',');
-        sb.append("channelId");
-        sb.append('=');
-        sb.append(((this.channelId == null)?"<null>":this.channelId));
-        sb.append(',');
-        sb.append("type");
-        sb.append('=');
-        sb.append(((this.type == null)?"<null>":this.type));
-        sb.append(',');
-        sb.append("direction");
-        sb.append('=');
-        sb.append(((this.direction == null)?"<null>":this.direction));
-        sb.append(',');
-        sb.append("lastState");
-        sb.append('=');
-        sb.append(((this.lastState == null)?"<null>":this.lastState));
-        sb.append(',');
-        sb.append("startTime");
-        sb.append('=');
-        sb.append(((this.startTime == null)?"<null>":this.startTime));
-        sb.append(',');
-        sb.append("answeredTime");
-        sb.append('=');
-        sb.append(((this.answeredTime == null)?"<null>":this.answeredTime));
-        sb.append(',');
-        sb.append("endTime");
-        sb.append('=');
-        sb.append(((this.endTime == null)?"<null>":this.endTime));
-        sb.append(',');
-        sb.append("incallDuration");
-        sb.append('=');
-        sb.append(((this.incallDuration == null)?"<null>":this.incallDuration));
-        sb.append(',');
-        sb.append("totalDuration");
-        sb.append('=');
-        sb.append(((this.totalDuration == null)?"<null>":this.totalDuration));
-        sb.append(',');
-        sb.append("fromNumber");
-        sb.append('=');
-        sb.append(((this.fromNumber == null)?"<null>":this.fromNumber));
-        sb.append(',');
-        sb.append("toNumber");
-        sb.append('=');
-        sb.append(((this.toNumber == null)?"<null>":this.toNumber));
-        sb.append(',');
-        sb.append("note");
-        sb.append('=');
-        sb.append(((this.note == null)?"<null>":this.note));
-        sb.append(',');
-        sb.append("star");
-        sb.append('=');
-        sb.append(((this.star == null)?"<null>":this.star));
-        sb.append(',');
-        sb.append("tags");
-        sb.append('=');
-        sb.append(((this.tags == null)?"<null>":this.tags));
-        sb.append(',');
-        sb.append("voicemail");
-        sb.append('=');
-        sb.append(((this.voicemail == null)?"<null>":this.voicemail));
-        sb.append(',');
-        sb.append("record");
-        sb.append('=');
-        sb.append(((this.record == null)?"<null>":this.record));
-        sb.append(',');
-        sb.append("fax");
-        sb.append('=');
-        sb.append(((this.fax == null)?"<null>":this.fax));
-        sb.append(',');
-        sb.append("user");
-        sb.append('=');
-        sb.append(((this.user == null)?"<null>":this.user));
-        sb.append(',');
-        sb.append("contact");
-        sb.append('=');
-        sb.append(((this.contact == null)?"<null>":this.contact));
-        sb.append(',');
-        sb.append("conference");
-        sb.append('=');
-        sb.append(((this.conference == null)?"<null>":this.conference));
-        sb.append(',');
-        sb.append("ivr");
-        sb.append('=');
-        sb.append(((this.ivr == null)?"<null>":this.ivr));
-        sb.append(',');
-        sb.append("amd");
-        sb.append('=');
-        sb.append(((this.amd == null)?"<null>":this.amd));
-        sb.append(',');
-        sb.append("isArchived");
-        sb.append('=');
-        sb.append(((this.isArchived == null)?"<null>":this.isArchived));
-        sb.append(',');
-        sb.append("scenarioName");
-        sb.append('=');
-        sb.append(((this.scenarioName == null)?"<null>":this.scenarioName));
-        sb.append(',');
-        sb.append("additionalProperties");
-        sb.append('=');
-        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
-        sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
-        } else {
-            sb.append(']');
-        }
-        return sb.toString();
     }
 
 }

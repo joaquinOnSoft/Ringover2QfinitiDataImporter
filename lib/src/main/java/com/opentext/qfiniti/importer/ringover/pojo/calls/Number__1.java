@@ -12,49 +12,49 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "ivr_id",
-    "name",
-    "color"
+    "number",
+    "type",
+    "format"
 })
-public class Ivr {
+public class Number__1 {
 
-    @JsonProperty("ivr_id")
-    private Integer ivrId;
-    @JsonProperty("name")
-    private String name;
-    @JsonProperty("color")
-    private String color;
+    @JsonProperty("number")
+    private Long number;
+    @JsonProperty("type")
+    private String type;
+    @JsonProperty("format")
+    private Format__1 format;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
-    @JsonProperty("ivr_id")
-    public Integer getIvrId() {
-        return ivrId;
+    @JsonProperty("number")
+    public Long getNumber() {
+        return number;
     }
 
-    @JsonProperty("ivr_id")
-    public void setIvrId(Integer ivrId) {
-        this.ivrId = ivrId;
+    @JsonProperty("number")
+    public void setNumber(Long number) {
+        this.number = number;
     }
 
-    @JsonProperty("name")
-    public String getName() {
-        return name;
+    @JsonProperty("type")
+    public String getType() {
+        return type;
     }
 
-    @JsonProperty("name")
-    public void setName(String name) {
-        this.name = name;
+    @JsonProperty("type")
+    public void setType(String type) {
+        this.type = type;
     }
 
-    @JsonProperty("color")
-    public String getColor() {
-        return color;
+    @JsonProperty("format")
+    public Format__1 getFormat() {
+        return format;
     }
 
-    @JsonProperty("color")
-    public void setColor(String color) {
-        this.color = color;
+    @JsonProperty("format")
+    public void setFormat(Format__1 format) {
+        this.format = format;
     }
 
     @JsonAnyGetter

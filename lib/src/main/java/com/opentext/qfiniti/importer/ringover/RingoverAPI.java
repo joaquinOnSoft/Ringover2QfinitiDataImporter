@@ -16,7 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.opentext.qfiniti.importer.ringover.pojo.calls.TerminatedCalls;
+import com.opentext.qfiniti.importer.ringover.pojo.calls.Calls;
 import com.opentext.qfiniti.importer.util.DateUtil;
 import com.opentext.qfiniti.importer.util.FileUtil;
 
@@ -145,11 +145,11 @@ public class RingoverAPI {
 	 * @param lastIdReturned - The request will return cdr_id (call logs) prior to this one 
 	 * @see <a href="https://mkyong.com/java/apache-httpclient-examples/">Apache HttpClient Examples</a>
 	 */
-	public TerminatedCalls getAllCalls(Date startDate, Date endDate, int limitCount, 
+	public Calls getAllCalls(Date startDate, Date endDate, int limitCount, 
 			 CallType callType, String lastIdReturned) {
 		
 		String url = null;
-		TerminatedCalls calls = null;
+		Calls calls = null;
 		
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		
@@ -190,7 +190,7 @@ public class RingoverAPI {
 		    // connection cannot be safely re-used and will be shut down and discarded
 		    // by the connection manager.
 		    calls = httpclient.execute(httpGet, response -> {
-				TerminatedCalls responseCalls = null;
+				Calls responseCalls = null;
 
 		        log.info(response.getCode() + " " + response.getReasonPhrase());
 		        
@@ -204,7 +204,7 @@ public class RingoverAPI {
                 	ObjectMapper mapper = new ObjectMapper();
                 	//JSON string to Java Object
                 	if(result != null && result.compareTo("") != 0) {
-                		responseCalls = mapper.readValue(result, TerminatedCalls.class);
+                		responseCalls = mapper.readValue(result, Calls.class);
                 	}
                 }
 		        // Ensure `response` it is fully consumed
@@ -229,7 +229,7 @@ public class RingoverAPI {
 		return calls;
 	}
 	
-	public TerminatedCalls getAllCalls() {
+	public Calls getAllCalls() {
 		return getAllCalls(null, null, MAX_LIMIT_COUNT, null, null);
 	}
 }

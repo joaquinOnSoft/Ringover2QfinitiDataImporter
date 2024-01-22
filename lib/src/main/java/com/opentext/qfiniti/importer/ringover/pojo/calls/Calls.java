@@ -18,14 +18,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "limit_count_setted",
     "limit_offset_setted",
     "last_id_offset_setted",
-    "ascending_order",
     "filter",
     "call_list_count",
     "call_list",
     "total_call_count",
     "total_missed_call_count"
 })
-public class TerminatedCalls {
+
+public class Calls {
 
     @JsonProperty("user_id")
     private Integer userId;
@@ -37,8 +37,6 @@ public class TerminatedCalls {
     private Integer limitOffsetSetted;
     @JsonProperty("last_id_offset_setted")
     private Integer lastIdOffsetSetted;
-    @JsonProperty("ascending_order")
-    private Boolean ascendingOrder;
     @JsonProperty("filter")
     private String filter;
     @JsonProperty("call_list_count")
@@ -102,16 +100,6 @@ public class TerminatedCalls {
         this.lastIdOffsetSetted = lastIdOffsetSetted;
     }
 
-    @JsonProperty("ascending_order")
-    public Boolean getAscendingOrder() {
-        return ascendingOrder;
-    }
-
-    @JsonProperty("ascending_order")
-    public void setAscendingOrder(Boolean ascendingOrder) {
-        this.ascendingOrder = ascendingOrder;
-    }
-
     @JsonProperty("filter")
     public String getFilter() {
         return filter;
@@ -170,66 +158,6 @@ public class TerminatedCalls {
     @JsonAnySetter
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(TerminatedCalls.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
-        sb.append("userId");
-        sb.append('=');
-        sb.append(((this.userId == null)?"<null>":this.userId));
-        sb.append(',');
-        sb.append("teamId");
-        sb.append('=');
-        sb.append(((this.teamId == null)?"<null>":this.teamId));
-        sb.append(',');
-        sb.append("limitCountSetted");
-        sb.append('=');
-        sb.append(((this.limitCountSetted == null)?"<null>":this.limitCountSetted));
-        sb.append(',');
-        sb.append("limitOffsetSetted");
-        sb.append('=');
-        sb.append(((this.limitOffsetSetted == null)?"<null>":this.limitOffsetSetted));
-        sb.append(',');
-        sb.append("lastIdOffsetSetted");
-        sb.append('=');
-        sb.append(((this.lastIdOffsetSetted == null)?"<null>":this.lastIdOffsetSetted));
-        sb.append(',');
-        sb.append("ascendingOrder");
-        sb.append('=');
-        sb.append(((this.ascendingOrder == null)?"<null>":this.ascendingOrder));
-        sb.append(',');
-        sb.append("filter");
-        sb.append('=');
-        sb.append(((this.filter == null)?"<null>":this.filter));
-        sb.append(',');
-        sb.append("callListCount");
-        sb.append('=');
-        sb.append(((this.callListCount == null)?"<null>":this.callListCount));
-        sb.append(',');
-        sb.append("callList");
-        sb.append('=');
-        sb.append(((this.callList == null)?"<null>":this.callList));
-        sb.append(',');
-        sb.append("totalCallCount");
-        sb.append('=');
-        sb.append(((this.totalCallCount == null)?"<null>":this.totalCallCount));
-        sb.append(',');
-        sb.append("totalMissedCallCount");
-        sb.append('=');
-        sb.append(((this.totalMissedCallCount == null)?"<null>":this.totalMissedCallCount));
-        sb.append(',');
-        sb.append("additionalProperties");
-        sb.append('=');
-        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
-        sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
-        } else {
-            sb.append(']');
-        }
-        return sb.toString();
     }
 
 }

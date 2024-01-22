@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.opentext.qfiniti.importer.pojo.CallRecording;
 import com.opentext.qfiniti.importer.ringover.pojo.calls.Call;
-import com.opentext.qfiniti.importer.ringover.pojo.calls.TerminatedCalls;
+import com.opentext.qfiniti.importer.ringover.pojo.calls.Calls;
 import com.opentext.qfiniti.importer.util.DateUtil;
 
 public class RingoverAPIWrapper {
@@ -149,7 +149,7 @@ public class RingoverAPIWrapper {
 
 		log.info("Limit count: " + limitCount);
 
-		TerminatedCalls calls = null;
+		Calls calls = null;
 		int numCallsRetrieved = 0;
 		int totalCallCount = 0;
 		int callListCount = 0;
@@ -213,7 +213,7 @@ public class RingoverAPIWrapper {
 			} while (numCallsRetrieved < totalCallCount);
 
 			startDateTmp = endDateTmp;
-			if (DateUtil.datePlusXDays(endDateTmp, 15).after(endDate)) {
+			if (DateUtil.datePlusXDays(startDateTmp, 15).after(endDate)) {
 				endDateTmp = endDate;
 			} else {
 				endDateTmp = DateUtil.datePlusXDays(endDateTmp, 15);
@@ -230,7 +230,7 @@ public class RingoverAPIWrapper {
 	 * @return List of `CallRecording`
 	 * @throws IOException
 	 */
-	private List<CallRecording> transform(TerminatedCalls calls, boolean discardCallsWithourAudio) throws IOException {
+	private List<CallRecording> transform(Calls calls, boolean discardCallsWithourAudio) throws IOException {
 		List<CallRecording> recordings = null;
 
 		if (calls != null) {
