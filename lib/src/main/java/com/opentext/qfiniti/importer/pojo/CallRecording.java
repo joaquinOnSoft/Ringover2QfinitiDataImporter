@@ -291,7 +291,8 @@ public class CallRecording implements IConfigGeneratorHeader {
 	public String[] getHeaders() {
 		List<String> header = new LinkedList<String>();
 
-		if(id != null) { 
+		if(id != null) {
+			header.add(HEADER_CALL_ID);
 			header.add(HEADER_CONNECTION_ID);
 		}
 		

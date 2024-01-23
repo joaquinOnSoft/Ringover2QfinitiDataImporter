@@ -17,6 +17,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.opentext.qfiniti.importer.io.CSVWriterSingleton;
 import com.opentext.qfiniti.importer.pojo.CallRecording;
 import com.opentext.qfiniti.importer.ringover.pojo.calls.Call;
 import com.opentext.qfiniti.importer.ringover.pojo.calls.Calls;
@@ -130,7 +131,10 @@ public class RingoverAPIWrapper {
 						"End date (" + endDate + ") must be posterior to Start date (" + startDate + ")");
 			}
 			
-			//"End date" must be included in the results
+			// END DATE must be included in the results
+			// By default when you create the END DATE, is using 00:00:00 as time, 
+			// so the last date is excluded to the result. We add 1 day to include 
+			// the END DATE in the results
 			endDate = DateUtil.datePlusXDays(endDate, 1);
 
 			startDateTmp = startDate;
@@ -182,7 +186,6 @@ public class RingoverAPIWrapper {
 								recordings.add(c);
 							}
 						}
-						//recordings.addAll(recordingsTmp);
 					}
 
 					// Update last call Id returned
@@ -234,9 +237,9 @@ public class RingoverAPIWrapper {
 	}
 
 	/**
-	 * Transforms a `TerminatedCalls` object to a List of `CallRecording`
+	 * Transforms a `Calls` object (Ringover object) to a List of `CallRecording`
 	 * 
-	 * @param calls - `TerminatedCalls` object returned by Ringover API
+	 * @param calls - `Calls` object returned by Ringover API
 	 * @return List of `CallRecording`
 	 * @throws IOException
 	 */
@@ -249,6 +252,7 @@ public class RingoverAPIWrapper {
 			String direction = null;
 			String recordingURL = null;
 			String recordingFileName = null;
+			String recordingFileNameDownloaded = null;
 			if (calls != null && calls.getCallList() != null) {
 				for (Call call : calls.getCallList()) {
 					CallRecording recording = new CallRecording();
@@ -317,20 +321,12 @@ public class RingoverAPIWrapper {
 						log.debug("Downloading recording URL : " + recordingURL);
 
 						recordingFileName = getFileNameFromURL(recordingURL);
-						recording.setFileName(recordingFileName);					
-
-						try {
-							// Download recording file (mp3) from recording URL
-							InputStream in = new URL(recordingURL).openStream();
-							Files.copy(in, Paths.get(workingDirectory, recordingFileName),
-									StandardCopyOption.REPLACE_EXISTING);
-							
-							log.info("DOWNLOADED recording URL : " + recordingURL);
-						} catch (IOException e) {
-							log.error(">>> Unable to download recording file (mp3) from recording URL: " + recordingFileName, e);
-							// Set file name to null to force the call skipping
-							recording.setFileName(null);
+						recordingFileNameDownloaded = dowloadCall(recordingURL, recordingFileName);
+						if(recordingFileNameDownloaded == null) {
+							CSVWriterSingleton urlsCSV = CSVWriterSingleton.getInstance();
+							urlsCSV.write(new String[] {call.getCallId(), recordingURL, call.getStartTime()});						
 						}
+						recording.setFileName(recordingFileNameDownloaded);					
 					}
 					else {
 						log.debug("Recording URL was null. ANI: " + recording.getAni() + " DNI: " + recording.getDnis());
@@ -351,11 +347,34 @@ public class RingoverAPIWrapper {
 			} // if
 		}
 
-		if(recordings != null)
+		if(recordings != null) {
+			//Sort results before returning it
 			Collections.sort(recordings, new CallRecordingComparatorByDate());
-
+		}
 		
 		return recordings;
+	}
+
+	/**
+	 * Download recording file (mp3) from recording URL
+	 * @param recordingURL - recording URL
+	 * @param recordingFileName - recording file name (mp3)
+	 */
+	private String dowloadCall(String recordingURL, String recordingFileName) {
+		try {
+			// Download recording file (mp3) from recording URL
+			InputStream in = new URL(recordingURL).openStream();
+			Files.copy(in, Paths.get(workingDirectory, recordingFileName),
+					StandardCopyOption.REPLACE_EXISTING);
+			
+			log.info("DOWNLOADED recording URL : " + recordingURL);
+		} catch (IOException e) {
+			log.error(">>> Unable to download recording file (mp3) from recording URL: " + recordingFileName, e);
+			// Set file name to null to force the call skipping
+			recordingFileName = null;
+		}
+		
+		return recordingFileName;
 	}
 	
 	/**

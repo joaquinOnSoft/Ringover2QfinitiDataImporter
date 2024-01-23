@@ -11,6 +11,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+/**
+ * <strong>jsonschema2pojo</strong>: Generate Plain Old Java Objects from JSON or JSON-Schema.
+ * @see https://www.jsonschema2pojo.org/
+ *
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "user_id",
@@ -24,7 +29,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "total_call_count",
     "total_missed_call_count"
 })
-
 public class Calls {
 
     @JsonProperty("user_id")

@@ -1,6 +1,7 @@
 package com.opentext.qfiniti.importer;
 
 public interface IConfigGeneratorHeader {
+	public static final String HEADER_CALL_ID = "call_id";
 	public static final String HEADER_CONNECTION_ID = "connection_id";
 	public static final String HEADER_PATH_NAME = "Path_Name";
 	public static final String HEADER_DATE_TIME = "Date_Time";
