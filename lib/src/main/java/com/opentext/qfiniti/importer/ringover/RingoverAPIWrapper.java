@@ -166,9 +166,11 @@ public class RingoverAPIWrapper {
 			do {
 				calls = api.getAllCalls(startDateTmp, endDateTmp, limitCount, callType, lastIdReturned);
 
-				log.info("Retrieved # calls: " + calls.getCallListCount());
 
 				if (calls != null && calls.getCallListCount() > 0) {
+					log.info("Retrieved # calls: " + calls.getCallListCount());
+
+					
 					List<CallRecording> recordingsTmp = transform(calls, discardCallsWithourAudio);
 
 					if (recordingsTmp != null && recordingsTmp.size() > 0) {
@@ -215,6 +217,10 @@ public class RingoverAPIWrapper {
 							numCallsRetrieved = totalCallCount;
 						}
 					}
+				}
+				else{
+					log.info("Retrieved # calls: 0");
+					totalCallCount = 0;
 				}
 			} while (numCallsRetrieved < totalCallCount);
 
