@@ -15,7 +15,7 @@ Command line tool to download calls from `Ringover` and generate an Excel file t
 To run this command line tool you just need to execute runable jar, i.e.
 
 ```script
-java -jar Ringover2QfinitiDataImporter-24.02.01.jar -from 20230601 -to 20230621 -c ANSWERED
+java -jar Ringover2QfinitiDataImporter-24.02.02.jar -from 20230601 -to 20230621 -c ANSWERED
 ```
 
 ### Valid arguments
@@ -27,8 +27,8 @@ These are the valid arguments admitted by this tool:
     - *MISSED*:    filters missed calls.
     - *OUT*:       filters outgoing calls.
     - *VOICEMAIL*: filters calls ending on voicemail.
- - **-f,--from <arg>**       (OPTIONAL) From date. Format: yyyymmdd. Default value: yesterday
- - **-o,--output <arg>**     (OPTIONAL) Output file name. Default value: calls-yyyyMMdd.xls
+ - **-f,--from <arg>**       (OPTIONAL) From date (included). Format: yyyymmdd. Default value: yesterday
+ - **-o,--output <arg>**     (OPTIONAL) Output file name (excluded). Default value: calls-yyyyMMdd.xls
  - **-t,--to <arg>**         (OPTIONAL) To date. Format: yyyymmdd. Default value: today
  - **-u,--unc <arg>**        (MADATORY) Universal Naming Convention (UNC) path to store the call recording files, i.e. *\\SERVER\recordings*
  - **-d, --discard**         (OPTIONAL) Discard calls without audio file associated (false by default)

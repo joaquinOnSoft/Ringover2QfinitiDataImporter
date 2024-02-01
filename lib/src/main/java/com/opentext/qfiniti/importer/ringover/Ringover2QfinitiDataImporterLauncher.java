@@ -96,8 +96,8 @@ public class Ringover2QfinitiDataImporterLauncher {
 			System.out.println("Downloading call recordings...");
 			
 			log.info("===== " + DateUtil.nowToUTC() + " =====");
-			log.info("Downloading call recordings...");
-			log.info("==============================");
+			log.info("      Downloading call recordings...      ");
+			log.info("==========================================");
 
 			RingoverAPIWrapper api = new RingoverAPIWrapper(params.getUncPath());
 			List<CallRecording> recordings = api.getAllCalls(params.getFrom(), params.getTo(), params.getCallType(),
@@ -126,7 +126,7 @@ public class Ringover2QfinitiDataImporterLauncher {
 		} catch (org.apache.commons.cli.ParseException | java.text.ParseException | IllegalArgumentException
 				| IOException | InvalidFormatException e) {
 			formatter.printHelp(
-					"java -jar Ringover2QfinitiDataImporter-23.11.03.jar --discard --wave --remove --from 20230601 --to 20230621 -c ANSWERED",
+					"java -jar Ringover2QfinitiDataImporter-24.02.02.jar --discard --wave --remove --from 20230601 --to 20230701 -c ANSWERED",
 					options);
 
 			exitInError(e.getMessage());
@@ -142,11 +142,11 @@ public class Ringover2QfinitiDataImporterLauncher {
 		Options options = new Options();
 
 		Option fromOption = new Option(SHORT_OPT_FROM, LONG_OPT_FROM, true,
-				"From date. Format: yyyymmdd. Default value: yesterday");
+				"From date (included). Format: yyyymmdd. Default value: yesterday");
 		options.addOption(fromOption);
 
 		Option toOption = new Option(SHORT_OPT_TO, LONG_OPT_TO, true,
-				"To date. Format: yyyymmdd. Default value: today");
+				"To date (excluded). Format: yyyymmdd. Default value: today");
 		options.addOption(toOption);
 
 		Option callTypeOption = new Option(SHORT_OPT_CALL_TYPE, LONG_OPT_CALL_TYPE, true,

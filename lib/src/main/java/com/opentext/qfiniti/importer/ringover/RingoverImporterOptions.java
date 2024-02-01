@@ -22,7 +22,13 @@ public class RingoverImporterOptions {
 		
 		discardCallsWithourAudio = false;
 		
-		to = Calendar.getInstance().getTime();
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY,0);
+		cal.set(Calendar.MINUTE,0);
+		cal.set(Calendar.SECOND,0);
+		cal.set(Calendar.MILLISECOND,0);
+		
+		to = cal.getTime();
 		from = DateUtil.datePlusXDays(to, -1);
 		
 		callType = CallType.ANSWERED;

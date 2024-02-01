@@ -132,11 +132,6 @@ public class RingoverAPIWrapper {
 						"End date (" + endDate + ") must be posterior to Start date (" + startDate + ")");
 			}
 			
-			// END DATE must be included in the results
-			// By default when you create the END DATE, is using 00:00:00 as time, 
-			// so the last date is excluded to the result. We add 1 day to include 
-			// the END DATE in the results
-			endDate = DateUtil.datePlusXDays(endDate, 1);
 
 			startDateTmp = startDate;
 			startDatePlus15Days = DateUtil.datePlusXDays(startDate, 15);
@@ -350,8 +345,8 @@ public class RingoverAPIWrapper {
 
 					if ((recording.getFileName() == null || recording.getFileName().compareTo("") == 0)
 							&& discardCallsWithourAudio) {
-						log.info("SKIPPING CALL without audio associated. URL: "
-								+ recordingURL
+						log.info("SKIPPING CALL without audio associated. "
+								+ " Call ID: " + recording.getId()
 								+ " DNIS: " + recording.getDnis() 
 								+ " Date: " + recording.getDateTimeAsString());
 						continue;
