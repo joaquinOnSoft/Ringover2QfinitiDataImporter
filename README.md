@@ -15,7 +15,7 @@ Command line tool to download calls from `Ringover` and generate an Excel file t
 To run this command line tool you just need to execute runable jar, i.e.
 
 ```script
-java -jar Ringover2QfinitiDataImporter-23.11.03.jar -from 20230601 -to 20230621 -c ANSWERED
+java -jar Ringover2QfinitiDataImporter-24.02.01.jar -from 20230601 -to 20230621 -c ANSWERED
 ```
 
 ### Valid arguments
@@ -114,7 +114,25 @@ apiKey=RINGOVER_API_KEY
  - Added new parameter **--remove**
  - SLF4J warning removed.
  
-### 23.11.03 change log
+### 23.11.28 change log
 
  - Released on October 28th 2023. 
  - Manage future date as input  
+
+### 24.01.23 change log
+  - Version 24.01.23
+  - Ringover API 2.0.6 support. 
+  - CSV with invalid call recordings URL generated. 
+  - New field call_id
+ 
+### 24.01.25 change log 
+
+  - Version 24.01.25. 
+  - Manage last API calls that doesn't return any value
+  
+### 24.02.01 change log
+
+ - Released on February 1st, 2024. 
+ - Fix iteration error when date range is longer than 15 days
+ - 3rd party libraries dependencies updated
+ - Remove SLF4J warning in logs   

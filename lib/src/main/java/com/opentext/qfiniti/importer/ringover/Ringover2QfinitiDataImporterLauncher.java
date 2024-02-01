@@ -94,6 +94,10 @@ public class Ringover2QfinitiDataImporterLauncher {
 			// The magic happens here
 			//
 			System.out.println("Downloading call recordings...");
+			
+			log.info("===== " + DateUtil.nowToUTC() + " =====");
+			log.info("Downloading call recordings...");
+			log.info("==============================");
 
 			RingoverAPIWrapper api = new RingoverAPIWrapper(params.getUncPath());
 			List<CallRecording> recordings = api.getAllCalls(params.getFrom(), params.getTo(), params.getCallType(),

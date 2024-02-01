@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
@@ -164,6 +165,8 @@ public class RingoverAPIWrapper {
 
 		do {
 			do {
+				log.info("\tCalls FROM " + startDateTmp + " TO " + endDateTmp);				
+				
 				calls = api.getAllCalls(startDateTmp, endDateTmp, limitCount, callType, lastIdReturned);
 
 
@@ -224,7 +227,10 @@ public class RingoverAPIWrapper {
 				}
 			} while (numCallsRetrieved < totalCallCount);
 
+			// Reinitializing flag to iterate between a second+ range of dates
 			lastIdReturned = null;
+			firstCallInPeriod = true;
+			numCallsRetrieved = 0;
 			
 			startDateTmp = endDateTmp;
 			if (DateUtil.datePlusXDays(startDateTmp, 15).after(endDate)) {
@@ -260,6 +266,7 @@ public class RingoverAPIWrapper {
 			String recordingFileName = null;
 			String recordingFileNameDownloaded = null;
 			if (calls != null && calls.getCallList() != null) {
+				int index=0;
 				for (Call call : calls.getCallList()) {
 					CallRecording recording = new CallRecording();
 
@@ -283,7 +290,7 @@ public class RingoverAPIWrapper {
 					try {
 						callStartTime = DateUtil.strToDate(startTimeStr, "yyyy-MM-dd'T'HH:mm:ss'.'SS'Z'");
 					} catch (ParseException e) {
-						log.info("Invalid date format (1). " + startTimeStr
+						log.warn("Invalid date format (1). " + startTimeStr
 								+ " - Expected: yyyy-MM-dd'T'HH:mm:ss'.'SS'Z'");
 
 						try {
@@ -324,24 +331,26 @@ public class RingoverAPIWrapper {
 					recordingURL = call.getRecord();
 					if (recordingURL != null) {
 
-						log.debug("Downloading recording URL : " + recordingURL);
+						log.info("(" + index++ + ") Downloading recording URL : " + recordingURL);
 
 						recordingFileName = getFileNameFromURL(recordingURL);
 						recordingFileNameDownloaded = dowloadCall(recordingURL, recordingFileName);
 						if(recordingFileNameDownloaded == null) {
+							log.warn("(" + index++ + ") Invalid recording URL : " + recordingURL);
+							
 							CSVWriterSingleton urlsCSV = CSVWriterSingleton.getInstance();
 							urlsCSV.write(new String[] {call.getCallId(), recordingURL, call.getStartTime()});						
 						}
 						recording.setFileName(recordingFileNameDownloaded);					
 					}
 					else {
-						log.debug("Recording URL was null. ANI: " + recording.getAni() + " DNI: " + recording.getDnis());
+						log.info("Recording URL was null. ANI: " + recording.getAni() + " DNI: " + recording.getDnis());
 					}
 					
 
 					if ((recording.getFileName() == null || recording.getFileName().compareTo("") == 0)
 							&& discardCallsWithourAudio) {
-						log.debug("SKIPPING CALL without audio associated. URL: "
+						log.info("SKIPPING CALL without audio associated. URL: "
 								+ recordingURL
 								+ " DNIS: " + recording.getDnis() 
 								+ " Date: " + recording.getDateTimeAsString());
@@ -370,10 +379,17 @@ public class RingoverAPIWrapper {
 		try {
 			// Download recording file (mp3) from recording URL
 			InputStream in = new URL(recordingURL).openStream();
-			Files.copy(in, Paths.get(workingDirectory, recordingFileName),
-					StandardCopyOption.REPLACE_EXISTING);
+			Path destination = Paths.get(workingDirectory, recordingFileName);
+			Files.copy(in, destination, StandardCopyOption.REPLACE_EXISTING);
 			
-			log.info("DOWNLOADED recording URL : " + recordingURL);
+			if(Files.exists(destination)) {
+				log.debug("DOWNLOADED recording URL : " + recordingURL);	
+			}
+			else {
+				log.warn(">>> Recording URL downloaded unsuccessfully!!! : " + recordingURL);
+			}
+			
+			
 		} catch (IOException e) {
 			log.error(">>> Unable to download recording file (mp3) from recording URL: " + recordingFileName, e);
 			// Set file name to null to force the call skipping

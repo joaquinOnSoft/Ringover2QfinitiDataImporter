@@ -3,7 +3,7 @@ plugins {
     id 'java-library'
 }
 
-version = '24.01.25' 
+version = '24.02.01' 
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -42,27 +42,27 @@ dependencies {
 
 	// Apache POI Common
 	// https://mvnrepository.com/artifact/org.apache.poi/poi
-	implementation 'org.apache.poi:poi:5.2.4'
+	implementation 'org.apache.poi:poi:5.2.5'
 	// Apache POI API Based On OPC and OOXML Schemas
-	// https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
-	// Vulnerabilities from dependencies: CVE-2023-44483
-	implementation 'org.apache.poi:poi-ooxml:5.2.4'
+	// https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml	
+	implementation 'org.apache.poi:poi-ooxml:5.2.5'
+
 
 
 	// General data-binding functionality for Jackson: works on core streaming API	
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
-	implementation 'com.fasterxml.jackson.core:jackson-core:2.15.3'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.16.1'
 	// General data-binding functionality for Jackson: works on core streaming API	
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.3'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
 
 		
 	// Apache HttpComponents Client	
 	// https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5
-	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
 	// Apache HttpComponents Core HTTP/1.1 » 5.2.1
 	// https://mvnrepository.com/artifact/org.apache.httpcomponents.core5/httpcore5
-	implementation 'org.apache.httpcomponents.core5:httpcore5:5.2.3'
+	implementation 'org.apache.httpcomponents.core5:httpcore5:5.2.4'
 
 	
 	// ==================================================================
@@ -73,16 +73,19 @@ dependencies {
 
 	// API for Apache Log4J, a highly configurable logging tool that focuses on performance and low garbage generation. It has a plugin architecture that makes it extensible and supports asynchronous logging based on LMAX Disruptor.
 	// https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api
-	implementation 'org.apache.logging.log4j:log4j-api:2.21.1'
+	implementation 'org.apache.logging.log4j:log4j-api:2.22.1'
 	// Implementation for Apache Log4J, a highly configurable logging tool that focuses on performance and low garbage generation. It has a plugin architecture that makes it extensible and supports asynchronous logging based on LMAX Disruptor.	
 	// https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
-	implementation 'org.apache.logging.log4j:log4j-core:2.21.1'
-	// https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j2-impl
-	implementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.21.1'
+	implementation 'org.apache.logging.log4j:log4j-core:2.22.1'
+	// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+	implementation 'org.slf4j:slf4j-api:2.0.11'
+	// https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
+	implementation 'org.slf4j:slf4j-simple:2.0.11'	
+
 
     // Module "junit-jupiter" of JUnit 5.    
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
-	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
 }
 
 tasks.named('test') {

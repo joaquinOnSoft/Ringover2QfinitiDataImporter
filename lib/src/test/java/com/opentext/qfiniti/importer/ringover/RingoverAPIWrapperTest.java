@@ -44,7 +44,7 @@ public class RingoverAPIWrapperTest {
 		}
 		
 		assertNotNull(recordings);
-		assertEquals(47, recordings.size());
+		assertEquals(72, recordings.size());
 		
 		//Remove mp3 files downloaded during the test
 		File[] mp3Files = FileUtil.filterFilesByExtension(".", ".mp3");
