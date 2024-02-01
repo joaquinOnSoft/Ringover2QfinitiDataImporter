@@ -136,3 +136,10 @@ apiKey=RINGOVER_API_KEY
  - Fix iteration error when date range is longer than 15 days
  - 3rd party libraries dependencies updated
  - Remove SLF4J warning in logs   
+ 
+### 24.02.02 change log
+
+ - Released on February 2nd, 2024. 
+ - Manage --to parameter properly
+ - Documentation improved
+ - Logs improved
