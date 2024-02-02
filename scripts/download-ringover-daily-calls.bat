@@ -1,4 +1,5 @@
-@ECHO OFF
+@ECHO ONFF
+
 CLS
 ECHO.
 
@@ -10,10 +11,13 @@ REM                       (C) OpenText 2023
 REM ============================================================
 
 
-SET JAVA_11="C:\Program Files\Java\jdk-11.0.21\bin\java.exe"
-SET JAR=C:\Ringover2QfinitiDataImporter\Ringover2QfinitiDataImporter-24.02.01.jar
+REM SET JAVA="C:\Program Files\Java\jdk-11.0.21\bin\java.exe"
+SET JAVA="C:\Progra~1\Java\jdk-17.0.2\bin\java.exe"
 
-SET UNC_PATH=\\DVMAPL442\Recordings
+SET JAR=C:\Ringover2QfinitiDataImporter\Ringover2QfinitiDataImporter-24.02.03.jar
+
+REM SET UNC_PATH=\\DVMAPL442\Recordings
+SET UNC_PATH=\\bcnfsox1\share_DVMAPL442$\Recordings
 
 REM `date` command returns a date like this: Tue 01/23/2024
 set YEAR=%date:~10,4%
@@ -63,9 +67,9 @@ REM ============================================================
 	
 	call :createDirIfNotExist %UNC_PATH%\%TYPE%\%YEAR%\%TODAY% 	
 	
-	echo %JAVA_11% -Xmx2G -jar %JAR% --discard --wav --remove --unc "%DAILY_UNC_PATH%" -c %TYPE%  --output "%DAILY_UNC_PATH%\%YEAR%%MONTH%%DAY%-calls-%TYPE%.xls"
+	echo %JAVA% -Xmx2G -jar %JAR% --discard --wav --remove --unc "%DAILY_UNC_PATH%" -c %TYPE%  --output "%DAILY_UNC_PATH%\%YEAR%%MONTH%%DAY%-calls-%TYPE%.xls"
 	echo/
-	%JAVA_11% -Xmx2G -jar %JAR% --discard --wav --remove --unc "%DAILY_UNC_PATH%" -c %TYPE%  --output "%DAILY_UNC_PATH%\%YEAR%%MONTH%%DAY%-calls-%TYPE%.xls" 
+	%JAVA% -Xmx2G -jar %JAR% --discard --wav --remove --unc "%DAILY_UNC_PATH%" -c %TYPE%  --output "%DAILY_UNC_PATH%\%YEAR%%MONTH%%DAY%-calls-%TYPE%.xls" 
 	REM > nul 2>&1
 	
 	goto :eof
