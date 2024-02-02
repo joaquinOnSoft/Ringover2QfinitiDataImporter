@@ -31,6 +31,16 @@ import com.opentext.qfiniti.importer.util.FileUtil;
  * 
  * <strong>Warning [Rate limit]</strong>: There is a 2-call per second limit applied to each request.
  * 
+ * <strong>How to paginate (In API 2.0.7)?</strong>
+ * <p>
+ * In calls, contacts, conversations, messages, blacklists and snooze logs, when you have to retrieve a list 
+ * of results, you might need to use a "pagination" system to break the results down into manageable batches. 
+ * To do so, we advise you to use the offset-based pagination.
+ * 
+ * Using the limit_offset parameter allows you to skip a number of items. For instance, providing a 
+ * 'limit_offset' X with a 'limit_count' Y will ignore the first X results, and the following Y results will be returned.
+ * </p>
+ * 
  * @see https://developer.ringover.com/
  * @author Joaquín Garzón
  *
@@ -83,6 +93,14 @@ public class RingoverAPI {
 	 */
 	private static final String PARAM_CALLS_LAST_ID_RETURNED = "last_id_returned";
 
+	/**
+	 * <strong>Parameter</strong>: limit_offset <br/>	
+	 * <strong>Data type</strong>: integer (int64) <br/>
+	 * Example: limit_offset=0 <br/>
+	 * <strong>Description</strong>: Number of elements that will be ignored
+	 */
+	private static final String PARAM_LIMIT_OFFSET = "limit_offset";
+	
 	/**
 	 * <strong>Parameter</strong>: call_type	
 	 * <strong>Data type</strong>: string
@@ -146,7 +164,7 @@ public class RingoverAPI {
 	 * @see <a href="https://mkyong.com/java/apache-httpclient-examples/">Apache HttpClient Examples</a>
 	 */
 	public Calls getAllCalls(Date startDate, Date endDate, int limitCount, 
-			 CallType callType, String lastIdReturned) {
+			 CallType callType, int limitOffset) {
 		
 		String url = null;
 		Calls calls = null;
@@ -170,10 +188,9 @@ public class RingoverAPI {
 			if(limitCount != MAX_LIMIT_COUNT) {
 				builder.addParameter(PARAM_CALLS_LIMIT_COUNT, Integer.toString(limitCount));
 			}
+						
+			builder.addParameter(PARAM_LIMIT_OFFSET, Integer.toString(limitOffset));			
 			
-			if(lastIdReturned != null) {
-				builder.addParameter(PARAM_CALLS_LAST_ID_RETURNED, lastIdReturned);
-			}
 			
 			if(callType != null) {
 				builder.addParameter(PARAM_CALLS_CALL_TYPE, callType.label);
@@ -230,6 +247,6 @@ public class RingoverAPI {
 	}
 	
 	public Calls getAllCalls() {
-		return getAllCalls(null, null, MAX_LIMIT_COUNT, null, null);
+		return getAllCalls(null, null, MAX_LIMIT_COUNT, null, 0);
 	}
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN">
+<Configuration status="DEBUG">
 	<Properties>
 		<Property name="basePath">.</Property>
 	</Properties>
@@ -19,11 +19,11 @@
     <Loggers>	
         <Logger name="com.opentext.qfiniti.importer" level="debug" additivity="false">
             <AppenderRef ref="File"/>
-            <!-- <AppenderRef ref="Console"/> -->
+            <AppenderRef ref="Console"/>
         </Logger>
         <Root level="debug">
             <AppenderRef ref="File"/>
-            <!-- <AppenderRef ref="Console"/> -->
+            <AppenderRef ref="Console"/>
         </Root>
     </Loggers>
 </Configuration>

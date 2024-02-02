@@ -31,7 +31,7 @@ public class RingoverAPIWrapper {
 	private static final String DIRECTION_IN = "in";
 
 	// The API documentation set the limit to 1000, but an API call just returns 100
-	private static final int MAX_NUMBER_RETURNED_ROWS = 100;
+	private static final int MAX_NUMBER_RETURNED_ROWS = 50;
 
 	private static final Logger log = LogManager.getLogger(RingoverAPIWrapper.class);
 
@@ -113,7 +113,7 @@ public class RingoverAPIWrapper {
 
 		List<CallRecording> recordings = null;
 
-		String lastIdReturned = null;
+		int limitOffset = 0;
 		Date startDateTmp = null;
 		Date startDatePlus15Days = null;
 		Date endDateTmp = null;
@@ -162,7 +162,7 @@ public class RingoverAPIWrapper {
 			do {
 				log.info("\tCalls FROM " + startDateTmp + " TO " + endDateTmp);				
 				
-				calls = api.getAllCalls(startDateTmp, endDateTmp, limitCount, callType, lastIdReturned);
+				calls = api.getAllCalls(startDateTmp, endDateTmp, limitCount, callType, limitOffset);
 
 
 				if (calls != null && calls.getCallListCount() > 0) {
@@ -201,7 +201,7 @@ public class RingoverAPIWrapper {
 
 					if (numCallsRetrieved <= totalCallCount) {
 						if (calls.getCallList() != null) {
-							lastIdReturned = Integer.toString(calls.getCallList().get(callListCount - 1).getCdrId());
+							limitOffset = numCallsRetrieved;
 
 							// Warning [Rate limit]: There is a 2-call per second limit 
 							// applied to each request.
@@ -223,7 +223,7 @@ public class RingoverAPIWrapper {
 			} while (numCallsRetrieved < totalCallCount);
 
 			// Reinitializing flag to iterate between a second+ range of dates
-			lastIdReturned = null;
+			limitOffset = 0;
 			firstCallInPeriod = true;
 			numCallsRetrieved = 0;
 			
@@ -297,8 +297,10 @@ public class RingoverAPIWrapper {
 
 					// dateTime in format "dd/MM/yyyy HH:mm:ss"
 					recording.setDateTime(DateUtil.dateToFormat(callStartTime, "dd/MM/yyyy HH:mm:ss"));
-					recording.setTeamMemberName(call.getUser().getLastname() + ", " + call.getUser().getFirstname());
-					recording.setGroupHierachy(Integer.toString(call.getUser().getTeamId()));
+					if(call.getUser() != null) {
+						recording.setTeamMemberName(call.getUser().getLastname() + ", " + call.getUser().getFirstname());
+						recording.setGroupHierachy(Integer.toString(call.getUser().getTeamId()));
+					}
 					// ANIs intentionally omitted
 
 					//
@@ -326,7 +328,7 @@ public class RingoverAPIWrapper {
 					recordingURL = call.getRecord();
 					if (recordingURL != null) {
 
-						log.info("(" + index++ + ") Downloading recording URL : " + recordingURL);
+						//log.info("(" + index++ + ") Downloading recording URL : " + recordingURL);
 
 						recordingFileName = getFileNameFromURL(recordingURL);
 						recordingFileNameDownloaded = dowloadCall(recordingURL, recordingFileName);

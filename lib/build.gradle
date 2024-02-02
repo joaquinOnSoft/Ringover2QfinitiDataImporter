@@ -3,7 +3,7 @@ plugins {
     id 'java-library'
 }
 
-version = '24.02.02' 
+version = '24.02.03' 
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -22,7 +22,7 @@ jar {
         attributes 'Implementation-Title': 'Command line tool to download calls from Ringover and generate an Excel file that can be used as input of Qfiniti Data Importer',  
         	'Implementation-Version': version,
         	'Main-Class': 'com.opentext.qfiniti.importer.ringover.Ringover2QfinitiDataImporterLauncher',
-        	'Class-Path': 'log4j2.xml'
+        	'Class-Path': '.'
     }
     
     from {
