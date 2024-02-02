@@ -140,6 +140,11 @@ apiKey=RINGOVER_API_KEY
 ### 24.02.02 change log
 
  - Released on February 2nd, 2024. 
- - Manage --to parameter properly
  - Documentation improved
  - Logs improved
+ 
+  
+### 24.02.03 change log
+
+ - Released on February 3rd, 2024. 
+ - Ringover API 2.0.7 support. Pagination has changed, now is based on *limit_offset* instead of *last_id_returned*
